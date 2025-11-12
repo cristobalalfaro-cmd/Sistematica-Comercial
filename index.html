@@ -11,33 +11,48 @@
 </head>
 
 <body>
-  <header>
-    <h1>Sistemática Comercial</h1>
-    <div class="userbar">
-      <input type="email" id="email" placeholder="tu@email.com">
-      <select id="role"></select>
-      <button id="btnSaveProfile">Guardar</button>
-    </div>
-  </header>
+  <header>…</header>
 
-  <!-- Barra de navegación -->
-  <nav class="tabs">
-    <button data-tab="intro" class="active">Introducción</button>
-    <button data-tab="agenda">Agenda</button>
-    <button data-tab="macro">Macro Proceso</button>
+  <div class="layout">
+    <!-- Barra lateral -->
+    <nav class="tabs vertical">
+      <button data-tab="intro" class="active">Introducción</button>
+      <button data-tab="agenda">Agenda</button>
+      <button data-tab="macro">Ciclo Comercial</button>
 
-    <!-- Botones de etapas -->
-    <button data-tab="checklist" data-stage="planificacion" class="stage-tab">Planificación</button>
-    <button data-tab="checklist" data-stage="cartera" class="stage-tab">Cartera</button>
-    <button data-tab="checklist" data-stage="contacto" class="stage-tab">Contacto</button>
-    <button data-tab="checklist" data-stage="deteccion" class="stage-tab">Detección</button>
-    <button data-tab="checklist" data-stage="asesoria" class="stage-tab">Asesoría</button>
-    <button data-tab="checklist" data-stage="cierre" class="stage-tab">Cierre</button>
+      <!-- Etapas -->
+      <button data-tab="checklist" data-stage="planificacion" class="stage-tab">Planificación</button>
+      <button data-tab="checklist" data-stage="cartera" class="stage-tab">Cartera</button>
+      <button data-tab="checklist" data-stage="contacto" class="stage-tab">Contacto</button>
+      <button data-tab="checklist" data-stage="deteccion" class="stage-tab">Detección</button>
+      <button data-tab="checklist" data-stage="asesoria" class="stage-tab">Asesoría</button>
+      <button data-tab="checklist" data-stage="cierre" class="stage-tab">Cierre</button>
 
-    <button data-tab="toolkit">Toolkit</button>
-    <button data-tab="difficulties">Dificultades</button>
-    <button data-tab="history">Historial</button>
-  </nav>
+      <button data-tab="toolkit">Toolkit</button>
+      <button data-tab="difficulties">Dificultades</button>
+      <button data-tab="history">Historial</button>
+    </nav>
+
+    <!-- Contenido -->
+    <main>
+      <!-- Intro, Agenda… -->
+
+      <!-- En la sección macro cambia el título -->
+      <section id="macro" class="tab">
+        <h2>Ciclo Comercial</h2>
+        <p>Haz clic en cualquiera de las etapas para ver su checklist asociado.</p>
+        <!-- (dejas el mismo SVG interactivo) -->
+        …
+      </section>
+
+      <!-- resto de secciones -->
+    </main>
+  </div>
+
+  <footer>…</footer>
+  <script src="app.js"></script>
+</body>
+
 
   <main>
     <!-- INTRODUCCIÓN -->
