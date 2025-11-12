@@ -52,6 +52,31 @@ function bindTabs(){
   });
 }
 
+async function renderChecklistByStage(stageKey){
+  const role_id = state.user.role_id || '';
+  const data = await httpGet({ action:'checklist_def', role_id, stage_id: stageKey });
+  const items = data.items || [];
+  const form = $('#checklistForm');
+  form.innerHTML = items.map(it => `
+    <div class="chk" data-id="${it.item_id}">
+      <label>${it.checklist_text}</label>
+      <div class="yn">
+        <button type="button" class="yes" data-v="YES">Sí</button>
+        <button type="button" class="no" data-v="NO">No</button>
+      </div>
+    </div>
+  `).join('');
+  form.querySelectorAll('.yn button').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const box=e.target.closest('.chk');
+      box.querySelectorAll('.yn button').forEach(b=>b.classList.remove('active'));
+      e.target.classList.add('active'); 
+      if(e.target.classList.contains('yes')) e.target.classList.add('yes');
+      if(e.target.classList.contains('no')) e.target.classList.add('no');
+    });
+  });
+}
+
 function bindProfile(){
   $('#email').value = state.user.email;
   $('#btnSaveProfile').addEventListener('click', () => {
