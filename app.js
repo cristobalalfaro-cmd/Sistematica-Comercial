@@ -1,12 +1,14 @@
 // ===================== CONFIG =====================
-const GAS_BASE = 'https://script.google.com/macros/s/AKfycbwImP77VSh5iXP3vPTOoPW2U62aUkoOSfeCyf4uYwBUNIHwCRKEgcpE99bVh6sNbdxWPA/exec'; // p.ej. https://script.google.com/macros/s/AKfycbx.../exec
+// Reemplaza por tu URL de Apps Script /exec
+const GAS_BASE = 'https://script.google.com/macros/s/AKfycbwImP77VSh5iXP3vPTOoPW2U62aUkoOSfeCyf4uYwBUNIHwCRKEgcpE99bVh6sNbdxWPA/exec';
 
 // ===================== STATE =====================
 const state = {
   roles: [],
   stages: [],
   introHTML: '',
-  user: { email: localStorage.getItem('email')||'', role_id: localStorage.getItem('role_id')||'' }
+  user: { email: localStorage.getItem('email')||'', role_id: localStorage.getItem('role_id')||'' },
+  currentStage: localStorage.getItem('selected_stage') || ''
 };
 
 // ===================== HELPERS =====================
@@ -22,10 +24,6 @@ function httpPost(payload){
   return fetch(GAS_BASE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }).then(r=>r.json());
 }
 
-function toast(msg){
-  console.log(msg);
-}
-
 // ===================== INIT =====================
 window.addEventListener('DOMContentLoaded', async() => {
   bindTabs();
@@ -33,50 +31,49 @@ window.addEventListener('DOMContentLoaded', async() => {
   await loadConfig();
   renderIntro();
   await renderAgenda();
-  buildStageSelects();
-  await renderMacro();
-  await renderChecklist();
+  buildStageSelects();           // para selects internos (si los usas)
+  await renderMacro();           // engancha clicks del SVG si existe
+  // checklist inicial (si hay etapa guardada)
+  if(state.currentStage){ await renderChecklistByStage(state.currentStage); }
   await renderToolkit();
   if(state.user.email) await renderHistory();
+
+  // botón dificultades
+  const diffBtn = document.getElementById('btnSubmitDiff');
+  if(diffBtn){
+    diffBtn.onclick = onSubmitDifficulty;
+  }
 });
 
+// ===================== NAV TABS =====================
 function bindTabs(){
   $$('.tabs button').forEach(btn=>{
     btn.addEventListener('click', () => {
+      // activar pestaña
       $$('.tabs button').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       const tab = btn.dataset.tab;
       $$('.tab').forEach(s=> s.classList.remove('active'));
       $('#'+tab).classList.add('active');
+
+      // si es un tab de etapa -> checklist por etapa
+      const stage = btn.dataset.stage;
+      if (tab === 'checklist') {
+        if (stage) {
+          state.currentStage = stage;
+          localStorage.setItem('selected_stage', stage);
+          renderChecklistByStage(stage);
+        } else {
+          const s = localStorage.getItem('selected_stage') || (state.stages[0] && state.stages[0].stage_id) || '';
+          state.currentStage = s;
+          renderChecklistByStage(s);
+        }
+      }
     });
   });
 }
 
-async function renderChecklistByStage(stageKey){
-  const role_id = state.user.role_id || '';
-  const data = await httpGet({ action:'checklist_def', role_id, stage_id: stageKey });
-  const items = data.items || [];
-  const form = $('#checklistForm');
-  form.innerHTML = items.map(it => `
-    <div class="chk" data-id="${it.item_id}">
-      <label>${it.checklist_text}</label>
-      <div class="yn">
-        <button type="button" class="yes" data-v="YES">Sí</button>
-        <button type="button" class="no" data-v="NO">No</button>
-      </div>
-    </div>
-  `).join('');
-  form.querySelectorAll('.yn button').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      const box=e.target.closest('.chk');
-      box.querySelectorAll('.yn button').forEach(b=>b.classList.remove('active'));
-      e.target.classList.add('active'); 
-      if(e.target.classList.contains('yes')) e.target.classList.add('yes');
-      if(e.target.classList.contains('no')) e.target.classList.add('no');
-    });
-  });
-}
-
+// ===================== PROFILE =====================
 function bindProfile(){
   $('#email').value = state.user.email;
   $('#btnSaveProfile').addEventListener('click', () => {
@@ -84,26 +81,37 @@ function bindProfile(){
     state.user.role_id = $('#role').value;
     localStorage.setItem('email', state.user.email);
     localStorage.setItem('role_id', state.user.role_id);
-    toast('Perfil guardado');
+    alert('Perfil guardado');
   });
 }
 
+// ===================== LOAD CONFIG =====================
 async function loadConfig(){
   const cfg = await httpGet({ action:'config' });
   state.roles = cfg.roles || [];
   state.stages = cfg.stages || [];
-  const intro = (cfg.intro && cfg.intro[0] && cfg.intro[0].html_content) || '<p>Bienvenido</p>';
+  const intro = (cfg.intro && cfg.intro[0] && cfg.intro[0].html_content) || '';
   state.introHTML = intro;
-  // roles select
+
   const sel = $('#role');
-  sel.innerHTML = state.roles.map(r=>`<option value="${r.role_id}">${r.role_name}</option>`).join('');
-  if(state.user.role_id){ sel.value = state.user.role_id; }
+  if(sel){
+    sel.innerHTML = state.roles.map(r=>`<option value="${r.role_id}">${r.role_name}</option>`).join('');
+    if(state.user.role_id){ sel.value = state.user.role_id; }
+  }
 }
 
 function renderIntro(){
-  $('#introContent').innerHTML = state.introHTML;
+  const tpl = document.querySelector('#introTemplate');
+  if (state.introHTML && state.introHTML.trim().length > 0) {
+    $('#introContent').innerHTML = state.introHTML;
+  } else if (tpl) {
+    $('#introContent').innerHTML = tpl.innerHTML;
+  } else {
+    $('#introContent').innerHTML = '<p>Bienvenido</p>';
+  }
 }
 
+// ===================== AGENDA (tabla + acordeón) =====================
 async function renderAgenda(){
   const role_id = state.user.role_id || '';
   const data = await httpGet({ action:'agenda', role_id });
@@ -111,7 +119,7 @@ async function renderAgenda(){
     period: String(r.period||''),
     day_or_week: r.day_or_week || '',
     description: r.description || '',
-    objective: r.objective || '' // NUEVO
+    objective: r.objective || ''
   }));
 
   const periodFilter = $('#agendaPeriod');
@@ -120,7 +128,6 @@ async function renderAgenda(){
   const btnToggle = $('#btnToggleAgendaView');
   let useAccordion = false;
 
-  // ---- helpers ----
   const PERIOD_LABEL = {
     daily: 'Diario',
     weekly: 'Semanal',
@@ -131,7 +138,8 @@ async function renderAgenda(){
   const PERIOD_ORDER = ['daily','weekly','monthly','semiannual','annual'];
 
   function paintTable(){
-    const filter = periodFilter.value;
+    if(!tbody) return;
+    const filter = periodFilter ? periodFilter.value : '';
     const filtered = rows.filter(r=> !filter || r.period===filter);
     tbody.innerHTML = filtered.map(r =>
       `<tr>
@@ -144,7 +152,8 @@ async function renderAgenda(){
   }
 
   function paintAccordion(){
-    const filter = periodFilter.value;
+    if(!acc) return;
+    const filter = periodFilter ? periodFilter.value : '';
     const groups = new Map();
     rows.forEach(r=>{
       if(filter && r.period!==filter) return;
@@ -175,7 +184,6 @@ async function renderAgenda(){
         </div>`;
     }).join('');
 
-    // listeners
     acc.querySelectorAll('.acc-head').forEach(btn=>{
       btn.onclick = () => {
         const target = btn.dataset.target;
@@ -188,167 +196,207 @@ async function renderAgenda(){
   // primer pintado
   paintTable();
 
-  // toggle vista
-  btnToggle.onclick = () => {
-    useAccordion = !useAccordion;
-    if(useAccordion){
-      $('#agendaTable').style.display = 'none';
-      acc.style.display = 'block';
-      btnToggle.textContent = 'Ver como Tabla';
-      paintAccordion();
-    } else {
-      $('#agendaTable').style.display = 'table';
-      acc.style.display = 'none';
-      btnToggle.textContent = 'Ver como Acordeón';
-      paintTable();
-    }
-  };
+  if (btnToggle) {
+    btnToggle.onclick = () => {
+      useAccordion = !useAccordion;
+      if(useAccordion){
+        const tbl = $('#agendaTable');
+        if(tbl) tbl.style.display = 'none';
+        if(acc) acc.style.display = 'block';
+        btnToggle.textContent = 'Ver como Tabla';
+        paintAccordion();
+      } else {
+        const tbl = $('#agendaTable');
+        if(tbl) tbl.style.display = 'table';
+        if(acc) acc.style.display = 'none';
+        btnToggle.textContent = 'Ver como Acordeón';
+        paintTable();
+      }
+    };
+  }
 
-  periodFilter.onchange = () => {
-    if(useAccordion) paintAccordion();
-    else paintTable();
-  };
+  if (periodFilter) {
+    periodFilter.onchange = () => {
+      if(useAccordion) paintAccordion();
+      else paintTable();
+    };
+  }
 }
 
-// ============= Macro Proceso =============
+// ===================== SELECTS de etapa (si los usas en otras vistas) =====================
 function buildStageSelects(){
+  // si tienes selects en Checklist o Dificultades, puedes llenarlos aquí
   const opts = state.stages.map(s=>`<option value="${s.stage_id}">${s.stage_name}</option>`).join('');
-  $('#stageSelect').innerHTML = opts;
-  $('#stageSelectChecklist').innerHTML = opts;
-  $('#diffStage').innerHTML = `<option value="">(sin etapa)</option>`+opts;
+  const s1 = $('#stageSelect');
+  if(s1) s1.innerHTML = opts;
+  const s2 = $('#stageSelectChecklist');
+  if(s2) s2.innerHTML = opts;
+  const s3 = $('#diffStage');
+  if(s3) s3.innerHTML = `<option value="">(sin etapa)</option>`+opts;
 }
 
+// ===================== MACRO (enganche de SVG -> checklist) =====================
 async function renderMacro(){
-  const container = document.querySelector('#macro');
-  container.querySelectorAll('.etapa').forEach(btn=>{
-    btn.onclick = () => {
-      const stageKey = btn.dataset.stage;
-      // Guarda el stage seleccionado en el localStorage para usar en checklist
+  const svg = document.getElementById('macroSVG');
+  if (!svg) return;
+  svg.querySelectorAll('.stage').forEach(node=>{
+    node.addEventListener('click', ()=>{
+      const stageKey = node.getAttribute('data-stage');
+      state.currentStage = stageKey;
       localStorage.setItem('selected_stage', stageKey);
-      // Cambia a la pestaña "Checklist"
+
+      // activar tab checklist y, si existe, su botón específico
       $$('.tabs button').forEach(b=>b.classList.remove('active'));
-      document.querySelector('.tabs button[data-tab="checklist"]').classList.add('active');
+      const stageBtn = document.querySelector(`.tabs button[data-tab="checklist"][data-stage="${stageKey}"]`);
+      const genericBtn = document.querySelector(`.tabs button[data-tab="checklist"]`);
+      (stageBtn || genericBtn)?.classList.add('active');
+
       $$('.tab').forEach(s=>s.classList.remove('active'));
       $('#checklist').classList.add('active');
-      // Cargar checklist correspondiente
+
       renderChecklistByStage(stageKey);
-    };
+    });
   });
 }
 
-// Nueva función específica para cargar checklist por etapa
+// ===================== CHECKLIST (por etapa) =====================
 async function renderChecklistByStage(stageKey){
+  if(!stageKey) stageKey = localStorage.getItem('selected_stage') || '';
+  state.currentStage = stageKey;
+
   const role_id = state.user.role_id || '';
   const data = await httpGet({ action:'checklist_def', role_id, stage_id: stageKey });
   const items = data.items || [];
-  const form = $('#checklistForm');
-  form.innerHTML = items.map(it => `
-    <div class="chk" data-id="${it.item_id}">
-      <label>${it.checklist_text}</label>
-      <div class="yn">
-        <button type="button" class="yes" data-v="YES">Sí</button>
-        <button type="button" class="no" data-v="NO">No</button>
-      </div>
-    </div>
-  `).join('');
-}
 
-
-// ============= Checklist =============
-async function renderChecklist(){
-  const stage_id = $('#stageSelectChecklist').value || (state.stages[0] && state.stages[0].stage_id) || '';
-  const role_id = state.user.role_id || '';
-  const data = await httpGet({ action:'checklist_def', stage_id, role_id });
-  const items = data.items || [];
   const form = $('#checklistForm');
-  form.innerHTML = items.map(it=>{
-    const id = `item_${it.item_id}`;
-    return `<div class="chk" data-id="${it.item_id}">
-      <label for="${id}">${it.checklist_text}</label>
-      <div class="yn">
-        <button type="button" class="yes" data-v="YES">Sí</button>
-        <button type="button" class="no" data-v="NO">No</button>
+  if (!form) return;
+
+  if (!items.length) {
+    form.innerHTML = `<div class="card"><p>No hay ítems configurados para esta etapa.</p></div>`;
+  } else {
+    form.innerHTML = items.map(it => `
+      <div class="chk" data-id="${it.item_id}">
+        <label>${it.checklist_text}</label>
+        <div class="yn">
+          <button type="button" class="yes" data-v="YES">Sí</button>
+          <button type="button" class="no" data-v="NO">No</button>
+        </div>
       </div>
-    </div>`;
-  }).join('');
-  form.querySelectorAll('.yn button').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      const box = e.target.closest('.chk');
-      box.querySelectorAll('.yn button').forEach(b=>b.classList.remove('active'));
-      e.target.classList.add('active');
-      if(e.target.classList.contains('yes')) e.target.classList.add('yes');
-      if(e.target.classList.contains('no')) e.target.classList.add('no');
+    `).join('');
+
+    form.querySelectorAll('.yn button').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const box=e.target.closest('.chk');
+        box.querySelectorAll('.yn button').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active'); 
+        if(e.target.classList.contains('yes')) e.target.classList.add('yes');
+        if(e.target.classList.contains('no')) e.target.classList.add('no');
+      });
     });
-  });
-  $('#btnSubmitChecklist').onclick = async(e) => {
-    e.preventDefault();
-    if(!state.user.email){ alert('Ingresa tu email en el encabezado'); return; }
-    const payloads = Array.from(document.querySelectorAll('.chk')).map(box=>{
-      const active = box.querySelector('.yn button.active');
-      const value = active ? active.dataset.v : '';
-      return {
-        type:'checklist',
-        user_email: state.user.email,
-        role_id: state.user.role_id,
-        stage_id,
-        item_id: box.dataset.id,
-        value,
-        notes: $('#notes').value.trim(),
-        client_org: $('#clientOrg').value.trim(),
-      };
-    }).filter(p=>p.value);
-    for(const p of payloads){ await httpPost(p); }
-    $('#notes').value = '';
-    toast('Checklist guardado');
-    if(state.user.email) renderHistory();
-  };
-  $('#stageSelectChecklist').onchange = renderChecklist;
+  }
+
+  // engancha Guardar para usar la etapa actual
+  const saveBtn = document.getElementById('btnSubmitChecklist');
+  if(saveBtn){
+    saveBtn.onclick = async(e) => {
+      e.preventDefault();
+      if(!state.user.email){ alert('Ingresa tu email en el encabezado'); return; }
+
+      const payloads = Array.from(document.querySelectorAll('.chk')).map(box=>{
+        const active = box.querySelector('.yn button.active');
+        const value = active ? active.dataset.v : '';
+        return {
+          type:'checklist',
+          user_email: state.user.email,
+          role_id: state.user.role_id,
+          stage_id: state.currentStage,
+          item_id: box.dataset.id,
+          value,
+          notes: document.getElementById('notes').value.trim(),
+          client_org: document.getElementById('clientOrg').value.trim(),
+        };
+      }).filter(p=>p.value); // solo envía los marcados
+
+      for(const p of payloads){ await httpPost(p); }
+      document.getElementById('notes').value = '';
+      if(state.user.email) renderHistory();
+      alert('Checklist guardado');
+    };
+  }
 }
 
-// ============= Toolkit =============
+// ===================== TOOLKIT =====================
 async function renderToolkit(){
   const role_id = state.user.role_id || '';
   const data = await httpGet({ action:'toolkit', role_id });
   const list = data.toolkit || [];
-  $('#toolkitList').innerHTML = list.map(t=>`<div class="card"><h4>${t.label}</h4><p>${t.type||''}</p><p><a href="${t.url}" target="_blank">Abrir</a></p></div>`).join('');
+  const cont = document.getElementById('toolkitList');
+  if(!cont) return;
+  cont.innerHTML = list.map(t=>`
+    <div class="card">
+      <h4>${t.label}</h4>
+      <p>${t.type||''}</p>
+      <p><a href="${t.url}" target="_blank">Abrir</a></p>
+    </div>`).join('');
 }
 
-// ============= Difficulties =============
-$('#btnSubmitDiff') && ($('#btnSubmitDiff').onclick = async(e)=>{
+// ===================== DIFICULTADES =====================
+async function onSubmitDifficulty(e){
   e.preventDefault();
   if(!state.user.email){ alert('Ingresa tu email en el encabezado'); return; }
   const payload = {
     type:'difficulty',
     user_email: state.user.email,
     role_id: state.user.role_id,
-    stage_id: $('#diffStage').value,
-    topic: $('#diffTopic').value.trim(),
-    description: $('#diffDescription').value.trim(),
-    severity: $('#diffSeverity').value,
-    tags: $('#diffTags').value.split(',').map(s=>s.trim()).filter(Boolean)
+    stage_id: document.getElementById('diffStage')?.value || '',
+    topic: document.getElementById('diffTopic')?.value.trim() || '',
+    description: document.getElementById('diffDescription')?.value.trim() || '',
+    severity: document.getElementById('diffSeverity')?.value || '1',
+    tags: (document.getElementById('diffTags')?.value || '').split(',').map(s=>s.trim()).filter(Boolean)
   };
   const res = await httpPost(payload);
   if(res.ok){
-    $('#diffTopic').value=''; $('#diffDescription').value=''; $('#diffTags').value='';
-    toast('Dificultad registrada');
+    const fields = ['diffTopic','diffDescription','diffTags'];
+    fields.forEach(id=>{ const el = document.getElementById(id); if(el) el.value=''; });
     if(state.user.email) renderHistory();
+    alert('Dificultad registrada');
   }
-});
+}
 
-// ============= History =============
+// ===================== HISTORIAL =====================
 async function renderHistory(){
   const email = state.user.email;
+  if(!email) return;
   const hc = await httpGet({ action:'history', type:'checklist', email });
   const hd = await httpGet({ action:'history', type:'difficulty', email });
+
   const stageMap = Object.fromEntries(state.stages.map(s=>[String(s.stage_id), s.stage_name]));
-  const tbodyC = $('#histChecklist tbody');
-  tbodyC.innerHTML = (hc.history||[]).slice(-100).reverse().map(r=>{
-    const d = new Date(r.timestamp);
-    return `<tr><td>${d.toLocaleString()}</td><td>${stageMap[String(r.stage_id)]||r.stage_id}</td><td>${r.item_id}</td><td>${r.value}</td><td>${r.notes||''}</td></tr>`;
-  }).join('');
-  const tbodyD = $('#histDiff tbody');
-  tbodyD.innerHTML = (hd.history||[]).slice(-100).reverse().map(r=>{
-    const d = new Date(r.timestamp);
-    return `<tr><td>${d.toLocaleString()}</td><td>${stageMap[String(r.stage_id)]||r.stage_id}</td><td>${r.topic||''}</td><td>${r.severity||''}</td><td>${r.status||''}</td></tr>`;
-  }).join('');
+
+  const tbodyC = document.querySelector('#histChecklist tbody');
+  if(tbodyC){
+    tbodyC.innerHTML = (hc.history||[]).slice(-100).reverse().map(r=>{
+      const d = new Date(r.timestamp);
+      return `<tr>
+        <td>${d.toLocaleString()}</td>
+        <td>${stageMap[String(r.stage_id)]||r.stage_id}</td>
+        <td>${r.item_id}</td>
+        <td>${r.value}</td>
+        <td>${r.notes||''}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const tbodyD = document.querySelector('#histDiff tbody');
+  if(tbodyD){
+    tbodyD.innerHTML = (hd.history||[]).slice(-100).reverse().map(r=>{
+      const d = new Date(r.timestamp);
+      return `<tr>
+        <td>${d.toLocaleString()}</td>
+        <td>${stageMap[String(r.stage_id)]||r.stage_id}</td>
+        <td>${r.topic||''}</td>
+        <td>${r.severity||''}</td>
+        <td>${r.status||''}</td>
+      </tr>`;
+    }).join('');
+  }
 }
