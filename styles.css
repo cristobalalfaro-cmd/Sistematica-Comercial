@@ -268,3 +268,66 @@ footer {
   .tabs { flex-wrap: wrap; }
   .userbar { flex-wrap: wrap; }
 }
+
+/* ===== Layout con barra lateral ===== */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 16px 16px 0;
+}
+
+/* La nav vertical reutiliza .tabs pero en columna */
+.tabs.vertical {
+  position: sticky;
+  top: 96px; /* debajo del header */
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 12px;
+  background: var(--gris-claro);
+}
+.tabs.vertical button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid var(--gris-medio);
+  background: var(--gris-claro);
+  color: var(--gris-oscuro);
+  padding: 10px 14px;
+  border-radius: 0;
+}
+.tabs.vertical button:last-child { border-bottom: none; }
+
+.tabs.vertical button.active {
+  background: var(--rojo);
+  color: var(--blanco);
+}
+
+/* main dentro del layout */
+.layout > main {
+  padding: 8px 8px 24px 8px; /* más contenido, menos margen */
+}
+
+/* En móviles/anchos pequeños vuelve a tabs arriba */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .tabs.vertical {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .tabs.vertical button {
+    border: 1px solid var(--gris-oscuro);
+    border-radius: 999px;
+    margin: 4px;
+  }
+}
