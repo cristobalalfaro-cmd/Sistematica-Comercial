@@ -1,5 +1,5 @@
 // ===================== CONFIG =====================
-const GAS_BASE = 'PASTE_YOUR_WEBAPP_URL_HERE'; // p.ej. https://script.google.com/macros/s/AKfycbx.../exec
+const GAS_BASE = 'https://script.google.com/macros/s/AKfycbwImP77VSh5iXP3vPTOoPW2U62aUkoOSfeCyf4uYwBUNIHwCRKEgcpE99bVh6sNbdxWPA/exec'; // p.ej. https://script.google.com/macros/s/AKfycbx.../exec
 
 // ===================== STATE =====================
 const state = {
