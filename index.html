@@ -19,15 +19,24 @@
     </div>
   </header>
 
-  <nav class="tabs">
-    <button data-tab="intro" class="active">Introducción</button>
-    <button data-tab="agenda">Agenda</button>
-    <button data-tab="macro">Macro Proceso</button>
-    <button data-tab="checklist">Checklist</button>
-    <button data-tab="toolkit">Toolkit</button>
-    <button data-tab="difficulties">Dificultades</button>
-    <button data-tab="history">Historial</button>
-  </nav>
+<nav class="tabs">
+  <button data-tab="intro" class="active">Introducción</button>
+  <button data-tab="agenda">Agenda</button>
+  <button data-tab="macro">Macro Proceso</button>
+
+  <!-- Botones por etapa (reemplazan el antiguo "Checklist") -->
+  <button data-tab="checklist" data-stage="planificacion" class="stage-tab">Planificación</button>
+  <button data-tab="checklist" data-stage="cartera" class="stage-tab">Cartera</button>
+  <button data-tab="checklist" data-stage="contacto" class="stage-tab">Contacto</button>
+  <button data-tab="checklist" data-stage="deteccion" class="stage-tab">Detección</button>
+  <button data-tab="checklist" data-stage="asesoria" class="stage-tab">Asesoría</button>
+  <button data-tab="checklist" data-stage="cierre" class="stage-tab">Cierre</button>
+
+  <button data-tab="toolkit">Toolkit</button>
+  <button data-tab="difficulties">Dificultades</button>
+  <button data-tab="history">Historial</button>
+</nav>
+
 
   <main>
     <section id="intro" class="tab active"><div id="introContent">Cargando…</div></section>
