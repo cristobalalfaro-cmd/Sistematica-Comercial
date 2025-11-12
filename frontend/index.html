@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistemática Comercial · MVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Sistemática Comercial</h1>
+    <div class="userbar">
+      <input id="email" type="email" placeholder="tu.email@empresa.com" />
+      <select id="role"></select>
+      <button id="btnSaveProfile">Guardar</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="intro" class="active">Introducción</button>
+    <button data-tab="agenda">Agenda</button>
+    <button data-tab="macro">Macro Proceso</button>
+    <button data-tab="checklist">Checklist</button>
+    <button data-tab="toolkit">Toolkit</button>
+    <button data-tab="difficulties">Dificultades</button>
+    <button data-tab="history">Historial</button>
+  </nav>
+
+  <main>
+    <section id="intro" class="tab active"><div id="introContent">Cargando…</div></section>
+    <section id="agenda" class="tab">
+      <div class="controls">
+        <select id="agendaPeriod">
+          <option value="">Todos los periodos</option>
+          <option value="weekly">Semanal</option>
+          <option value="monthly">Mensual</option>
+          <option value="quarterly">Trimestral</option>
+          <option value="annual">Anual</option>
+        </select>
+      </div>
+      <table id="agendaTable"><thead><tr><th>Periodo</th><th>Día/Semana</th><th>Descripción</th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <section id="macro" class="tab">
+      <div class="controls">
+        <select id="stageSelect"></select>
+      </div>
+      <div id="macroList" class="cards"></div>
+    </section>
+
+    <section id="checklist" class="tab">
+      <div class="controls">
+        <select id="stageSelectChecklist"></select>
+      </div>
+      <form id="checklistForm"></form>
+      <div class="actions">
+        <input id="notes" placeholder="Notas (opcional)" />
+        <input id="clientOrg" placeholder="Cliente/Organización (opcional)" />
+        <button id="btnSubmitChecklist">Guardar Checklist</button>
+      </div>
+    </section>
+
+    <section id="toolkit" class="tab">
+      <div id="toolkitList" class="cards"></div>
+    </section>
+
+    <section id="difficulties" class="tab">
+      <form id="diffForm" class="stack">
+        <div class="grid">
+          <select id="diffStage"></select>
+          <input id="diffTopic" placeholder="Tema" />
+          <select id="diffSeverity">
+            <option value="1">Baja</option>
+            <option value="2">Media</option>
+            <option value="3">Alta</option>
+          </select>
+        </div>
+        <textarea id="diffDescription" placeholder="Describe la dificultad"></textarea>
+        <input id="diffTags" placeholder="Tags (coma separada)" />
+        <button id="btnSubmitDiff">Reportar dificultad</button>
+      </form>
+    </section>
+
+    <section id="history" class="tab">
+      <h3>Últimos registros</h3>
+      <div class="grid two">
+        <div>
+          <h4>Checklist</h4>
+          <table id="histChecklist"><thead><tr><th>Fecha</th><th>Etapa</th><th>Item</th><th>Valor</th><th>Notas</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div>
+          <h4>Dificultades</h4>
+          <table id="histDiff"><thead><tr><th>Fecha</th><th>Etapa</th><th>Tema</th><th>Severidad</th><th>Estado</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>MVP v0.1 · Montserrat · LocalStorage + Google Sheets</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

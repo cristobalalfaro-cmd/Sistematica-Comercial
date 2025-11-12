@@ -1,0 +1,3 @@
+tool_id,role_id,label,type,url
+T1,1,Plantilla reunión de descubrimiento,doc,https://example.com/descubrimiento
+T2,1,Checklist pre-visita,doc,https://example.com/checklist

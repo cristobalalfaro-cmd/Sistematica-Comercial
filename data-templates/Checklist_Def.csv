@@ -1,0 +1,4 @@
+item_id,stage_id,role_id,checklist_text,frequency,sla_minutes,tool_ref
+P1,P,1,Revisó histórico de contacto del cliente,per_opportunity,15,CRM
+P2,P,1,Identificó oportunidades por últimas compras,per_opportunity,10,BI
+D1,D,1,Preparó preguntas de descubrimiento,per_opportunity,10,Plantilla

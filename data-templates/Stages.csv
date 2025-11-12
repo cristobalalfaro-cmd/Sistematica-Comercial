@@ -1,0 +1,5 @@
+stage_id,stage_name,stage_order,description
+P,Planificación Comercial,1,Preparación previa a contactos
+D,Descubrimiento,2,Levantamiento de necesidades
+PRES,Presentación/Propuesta,3,Presentar solución y valor
+Cierre,Cierre,4,Negociación y cierre
