@@ -113,36 +113,97 @@
   <h2>Macro Proceso Comercial</h2>
   <p>El ciclo comercial se estructura en seis etapas principales. Cada una representa un conjunto de actividades y conductas clave definidas en la sistemática. Haz clic en cualquiera para ver su checklist asociado.</p>
 
-  <div class="macro-diagrama">
-    <div class="flecha"></div>
-    <div class="etapas">
-      <div class="etapa" data-stage="planificacion">
-        <div class="icono">🗒️</div>
-        <span>Planificación Comercial</span>
-      </div>
-      <div class="etapa" data-stage="cartera">
-        <div class="icono">🔭</div>
-        <span>Gestión de Cartera</span>
-      </div>
-      <div class="etapa" data-stage="contacto">
-        <div class="icono">✅</div>
-        <span>Contacto Clientes</span>
-      </div>
-      <div class="etapa" data-stage="deteccion">
-        <div class="icono">🤝</div>
-        <span>Detección de Necesidades</span>
-      </div>
-      <div class="etapa" data-stage="asesoria">
-        <div class="icono">❤️</div>
-        <span>Asesoría y Propuesta</span>
-      </div>
-      <div class="etapa" data-stage="cierre">
-        <div class="icono">💬</div>
-        <span>Cierre y Seguimiento</span>
-      </div>
-    </div>
-  </div>
-</section>
+  <svg id="macroSVG" viewBox="0 0 1600 360" width="100%" role="img" aria-label="Macro Proceso Comercial">
+    <defs>
+      <style>
+        .t { font-family: 'Montserrat', system-ui, sans-serif; fill:#333333; font-weight:700; }
+        .tSmall { font-family: 'Montserrat', system-ui, sans-serif; fill:#333333; font-weight:600; font-size:22px; }
+        .bubble { fill:#ffffff; }
+        .lbl { fill:#0b2a57; }
+        .shadow { filter: drop-shadow(0 2px 4px rgba(0,0,0,.15)); }
+        .ring-plan{ stroke:#ffb300; }
+        .ring-cart{ stroke:#1e88e5; }
+        .ring-cont{ stroke:#43a047; }
+        .ring-det{  stroke:#e53935; }
+        .ring-ase{  stroke:#8e24aa; }
+        .ring-cie{  stroke:#039be5; }
+      </style>
+    </defs>
+
+  <!-- Flecha de fondo -->
+  <g>
+    <rect x="40" y="165" width="1450" height="30" fill="#e6e6e6"></rect>
+    <polygon points="1490,150 1560,180 1490,210" fill="#e6e6e6"></polygon>
+  </g>
+
+  <!-- Función util para burbujas -->
+  <!-- Cada grupo <g class="stage" data-stage="..."> es clickeable -->
+  <g class="stage shadow" data-stage="planificacion" cursor="pointer">
+    <circle cx="200" cy="180" r="82" class="bubble" stroke-width="10" class="ring-plan"></circle>
+    <circle cx="200" cy="180" r="82" fill="#ffffff" stroke="#ffb300" stroke-width="10"></circle>
+    <text x="200" y="150" text-anchor="middle" class="tSmall">🗒️</text>
+    <text x="200" y="190" text-anchor="middle" class="t" font-size="20">Planificación</text>
+    <text x="200" y="215" text-anchor="middle" class="t" font-size="20">Comercial</text>
+  </g>
+
+  <g class="stage shadow" data-stage="cartera" cursor="pointer">
+    <circle cx="450" cy="180" r="82" fill="#ffffff" stroke="#1e88e5" stroke-width="10"></circle>
+    <text x="450" y="150" text-anchor="middle" class="tSmall">🔭</text>
+    <text x="450" y="190" text-anchor="middle" class="t" font-size="20">Gestión de</text>
+    <text x="450" y="215" text-anchor="middle" class="t" font-size="20">Cartera</text>
+  </g>
+
+  <g class="stage shadow" data-stage="contacto" cursor="pointer">
+    <circle cx="700" cy="180" r="82" fill="#ffffff" stroke="#43a047" stroke-width="10"></circle>
+    <text x="700" y="150" text-anchor="middle" class="tSmall">✅</text>
+    <text x="700" y="190" text-anchor="middle" class="t" font-size="20">Contacto</text>
+    <text x="700" y="215" text-anchor="middle" class="t" font-size="20">Clientes</text>
+  </g>
+
+  <g class="stage shadow" data-stage="deteccion" cursor="pointer">
+    <circle cx="950" cy="180" r="82" fill="#ffffff" stroke="#e53935" stroke-width="10"></circle>
+    <text x="950" y="150" text-anchor="middle" class="tSmall">🤝</text>
+    <text x="950" y="190" text-anchor="middle" class="t" font-size="20">Detección de</text>
+    <text x="950" y="215" text-anchor="middle" class="t" font-size="20">Necesidades</text>
+  </g>
+
+  <g class="stage shadow" data-stage="asesoria" cursor="pointer">
+    <circle cx="1200" cy="180" r="82" fill="#ffffff" stroke="#8e24aa" stroke-width="10"></circle>
+    <text x="1200" y="150" text-anchor="middle" class="tSmall">❤️</text>
+    <text x="1200" y="190" text-anchor="middle" class="t" font-size="20">Asesoría y</text>
+    <text x="1200" y="215" text-anchor="middle" class="t" font-size="20">Propuesta</text>
+  </g>
+
+  <g class="stage shadow" data-stage="cierre" cursor="pointer">
+    <circle cx="1450" cy="180" r="82" fill="#ffffff" stroke="#039be5" stroke-width="10"></circle>
+    <text x="1450" y="150" text-anchor="middle" class="tSmall">💬</text>
+    <text x="1450" y="190" text-anchor="middle" class="t" font-size="20">Cierre y</text>
+    <text x="1450" y="215" text-anchor="middle" class="t" font-size="20">Seguimiento</text>
+  </g>
+</svg>
+
+<script>
+  // Enlaza clics del SVG al checklist por etapa
+  (function(){
+    const svg = document.getElementById('macroSVG');
+    if(!svg) return;
+    svg.querySelectorAll('.stage').forEach(node=>{
+      node.addEventListener('click', ()=>{
+        const stageKey = node.getAttribute('data-stage');
+        localStorage.setItem('selected_stage', stageKey);
+        // Cambia a pestaña Checklist
+        document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+        const tabBtn = document.querySelector('.tabs button[data-tab="checklist"]');
+        if (tabBtn) tabBtn.classList.add('active');
+        document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
+        document.getElementById('checklist').classList.add('active');
+        // Render específico por etapa
+        if (typeof renderChecklistByStage === 'function') renderChecklistByStage(stageKey);
+      });
+    });
+  })();
+</script>
+
 
     <section id="checklist" class="tab">
       <div class="controls">
