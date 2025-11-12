@@ -194,13 +194,40 @@ function buildStageSelects(){
 }
 
 async function renderMacro(){
-  const stage_id = $('#stageSelect').value || (state.stages[0] && state.stages[0].stage_id) || '';
-  const data = await httpGet({ action:'macro', stage_id });
-  const list = data.macro || [];
-  const cont = $('#macroList');
-  cont.innerHTML = list.map(row=>`<div class="card"><h4>${row.activity_title||''}</h4><p>${row.activity_description||''}</p></div>`).join('');
-  $('#stageSelect').onchange = renderMacro;
+  const container = document.querySelector('#macro');
+  container.querySelectorAll('.etapa').forEach(btn=>{
+    btn.onclick = () => {
+      const stageKey = btn.dataset.stage;
+      // Guarda el stage seleccionado en el localStorage para usar en checklist
+      localStorage.setItem('selected_stage', stageKey);
+      // Cambia a la pestaña "Checklist"
+      $$('.tabs button').forEach(b=>b.classList.remove('active'));
+      document.querySelector('.tabs button[data-tab="checklist"]').classList.add('active');
+      $$('.tab').forEach(s=>s.classList.remove('active'));
+      $('#checklist').classList.add('active');
+      // Cargar checklist correspondiente
+      renderChecklistByStage(stageKey);
+    };
+  });
 }
+
+// Nueva función específica para cargar checklist por etapa
+async function renderChecklistByStage(stageKey){
+  const role_id = state.user.role_id || '';
+  const data = await httpGet({ action:'checklist_def', role_id, stage_id: stageKey });
+  const items = data.items || [];
+  const form = $('#checklistForm');
+  form.innerHTML = items.map(it => `
+    <div class="chk" data-id="${it.item_id}">
+      <label>${it.checklist_text}</label>
+      <div class="yn">
+        <button type="button" class="yes" data-v="YES">Sí</button>
+        <button type="button" class="no" data-v="NO">No</button>
+      </div>
+    </div>
+  `).join('');
+}
+
 
 // ============= Checklist =============
 async function renderChecklist(){
