@@ -32,15 +32,35 @@
   <main>
     <section id="intro" class="tab active"><div id="introContent">Cargando…</div></section>
     <section id="agenda" class="tab">
-      <div class="controls">
-        <select id="agendaPeriod">
-          <option value="">Todos los periodos</option>
-          <option value="weekly">Semanal</option>
-          <option value="monthly">Mensual</option>
-          <option value="quarterly">Trimestral</option>
-          <option value="annual">Anual</option>
-        </select>
-      </div>
+  <div class="controls">
+    <select id="agendaPeriod">
+      <option value="">Todos los periodos</option>
+      <option value="daily">Diario</option>
+      <option value="weekly">Semanal</option>
+      <option value="monthly">Mensual</option>
+      <option value="semiannual">Semestral</option>
+      <option value="annual">Anual</option>
+    </select>
+    <button id="btnToggleAgendaView" type="button">Ver como Acordeón</button>
+  </div>
+
+  <!-- Tabla clásica -->
+  <table id="agendaTable">
+    <thead>
+      <tr>
+        <th>Periodo</th>
+        <th>Día/Semana</th>
+        <th>Descripción</th>
+        <th>Objetivo</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Acordeón por período -->
+  <div id="agendaAccordion" style="display:none; margin-top:16px;"></div>
+</section>
+
       <table id="agendaTable"><thead><tr><th>Periodo</th><th>Día/Semana</th><th>Descripción</th></tr></thead><tbody></tbody></table>
     </section>
 
