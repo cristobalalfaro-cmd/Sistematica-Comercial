@@ -248,3 +248,20 @@ footer {
   .tabs { flex-wrap: wrap; }
   .userbar { flex-wrap: wrap; }
 }
+/* Agenda - acordeón */
+.acc-panel { border: 1px solid var(--gris-oscuro); border-radius: 8px; margin-bottom: 10px; background: var(--blanco); }
+.acc-head {
+  width: 100%;
+  text-align: left;
+  background: var(--gris-claro);
+  color: var(--gris-oscuro);
+  border: none;
+  border-bottom: 1px solid var(--gris-medio);
+  padding: 10px 12px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+.acc-body { padding: 10px 14px; }
+.acc-list { margin: 0; padding-left: 18px; }
+.acc-list li { margin-bottom: 8px; }
