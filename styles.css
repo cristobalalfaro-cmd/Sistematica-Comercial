@@ -90,4 +90,37 @@ main{ padding:20px; }
   .ecosistema { height: auto; display: grid; gap: 14px; }
   .core, .rol { position: static; transform: none; width: 100%; max-width: 720px; }
 }
+/* Intro Narrativa */
+.intro-sistematica {
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.intro-sistematica h1, .intro-sistematica h2 {
+  color: var(--accent);
+  margin-top: 32px;
+}
+.intro-sistematica h1 { font-size: 1.6rem; }
+.intro-sistematica h2 { font-size: 1.2rem; }
+.intro-sistematica p, .intro-sistematica ul { color: var(--fg); font-size: .95rem; }
+.intro-sistematica ul { margin-left: 24px; }
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+.roles-grid .rol {
+  background: var(--panel);
+  border: 1px solid #2a2f3a;
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: 0 0 10px rgba(0,0,0,.3);
+}
+.roles-grid .rol h3 {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
 
