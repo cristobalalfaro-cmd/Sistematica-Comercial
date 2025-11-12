@@ -1,269 +1,240 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistemática Comercial · MVP</title>
+  <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <header>
     <h1>Sistemática Comercial</h1>
     <div class="userbar">
-      <input id="email" type="email" placeholder="tu.email@empresa.com" />
+      <input type="email" id="email" placeholder="tu@email.com">
       <select id="role"></select>
       <button id="btnSaveProfile">Guardar</button>
     </div>
   </header>
 
-<nav class="tabs">
-  <button data-tab="intro" class="active">Introducción</button>
-  <button data-tab="agenda">Agenda</button>
-  <button data-tab="macro">Macro Proceso</button>
+  <!-- Barra de navegación -->
+  <nav class="tabs">
+    <button data-tab="intro" class="active">Introducción</button>
+    <button data-tab="agenda">Agenda</button>
+    <button data-tab="macro">Macro Proceso</button>
 
-  <!-- Botones por etapa (reemplazan el antiguo "Checklist") -->
-  <button data-tab="checklist" data-stage="planificacion" class="stage-tab">Planificación</button>
-  <button data-tab="checklist" data-stage="cartera" class="stage-tab">Cartera</button>
-  <button data-tab="checklist" data-stage="contacto" class="stage-tab">Contacto</button>
-  <button data-tab="checklist" data-stage="deteccion" class="stage-tab">Detección</button>
-  <button data-tab="checklist" data-stage="asesoria" class="stage-tab">Asesoría</button>
-  <button data-tab="checklist" data-stage="cierre" class="stage-tab">Cierre</button>
+    <!-- Botones de etapas -->
+    <button data-tab="checklist" data-stage="planificacion" class="stage-tab">Planificación</button>
+    <button data-tab="checklist" data-stage="cartera" class="stage-tab">Cartera</button>
+    <button data-tab="checklist" data-stage="contacto" class="stage-tab">Contacto</button>
+    <button data-tab="checklist" data-stage="deteccion" class="stage-tab">Detección</button>
+    <button data-tab="checklist" data-stage="asesoria" class="stage-tab">Asesoría</button>
+    <button data-tab="checklist" data-stage="cierre" class="stage-tab">Cierre</button>
 
-  <button data-tab="toolkit">Toolkit</button>
-  <button data-tab="difficulties">Dificultades</button>
-  <button data-tab="history">Historial</button>
-</nav>
-
+    <button data-tab="toolkit">Toolkit</button>
+    <button data-tab="difficulties">Dificultades</button>
+    <button data-tab="history">Historial</button>
+  </nav>
 
   <main>
-    <section id="intro" class="tab active"><div id="introContent">Cargando…</div></section>
+    <!-- INTRODUCCIÓN -->
+    <section id="intro" class="tab active">
+      <div id="introContent"></div>
+
+      <!-- Plantilla fallback si no hay contenido dinámico -->
+      <template id="introTemplate">
+        <h2>¿Qué es una Sistemática Comercial?</h2>
+        <p>Una Sistemática Comercial es un modelo de trabajo estructurado que define cómo una organización planifica, ejecuta y mide sus actividades comerciales a lo largo del tiempo. Su objetivo es alinear la gestión de ventas, el relacionamiento con los clientes y la administración de oportunidades en torno a procesos comunes, herramientas compartidas y estándares de ejecución.</p>
+
+        <p>En la práctica, una sistemática traduce la estrategia comercial en acciones concretas: define etapas, tareas, interlocutores, herramientas, indicadores y tiempos para cada rol del equipo comercial, asegurando consistencia, trazabilidad y mejora continua.</p>
+
+        <h2>¿Para qué sirve?</h2>
+        <p>Implementar una Sistemática Comercial permite ordenar la gestión de ventas y enfocar los esfuerzos del equipo en lo que realmente genera valor. Entre sus principales beneficios destacan:</p>
+        <ul>
+          <li><strong>Claridad y alineamiento:</strong> todos los roles comerciales comparten una misma hoja de ruta y objetivos.</li>
+          <li><strong>Eficiencia:</strong> se eliminan redundancias, se optimizan tiempos y se priorizan las actividades de mayor impacto.</li>
+          <li><strong>Seguimiento:</strong> la sistemática facilita medir cumplimiento, identificar brechas y monitorear el desempeño de manera continua.</li>
+          <li><strong>Desarrollo de capacidades:</strong> los equipos fortalecen sus prácticas a través de rutinas y herramientas comunes.</li>
+          <li><strong>Escalabilidad:</strong> la organización puede replicar buenas prácticas en distintas regiones, productos o segmentos.</li>
+        </ul>
+
+        <h2>Actores Clave</h2>
+        <p>El modelo comercial se apoya en un ecosistema de roles que colaboran para asegurar una gestión comercial integral y sostenible:</p>
+
+        <div class="cards">
+          <div class="card">
+            <h4>Asesor Inmobiliario</h4>
+            <p><strong>Misión:</strong> Proporcionar asesoría a clientes en el negocio inmobiliario, con el propósito de contribuir a la gestión comercial de carteras de alto patrimonio.</p>
+            <p><strong>Funciones Comerciales:</strong> Asesoría a clientes, apoyo a cierres cargados en bolsón con acción recomendada, sinergia área inmobiliaria e hipotecaria.</p>
+          </div>
+          <div class="card">
+            <h4>Analista de Inversión</h4>
+            <p><strong>Misión:</strong> Proporcionar apoyo en la estrategia definida por el Advisor, con el fin de rentabilizar de forma eficiente la cartera de productos de los clientes.</p>
+            <p><strong>Funciones Comerciales:</strong> Coordinación de cambios en la cartera de inversiones, asegurando alineamiento con las recomendaciones de inversión.</p>
+          </div>
+          <div class="card">
+            <h4>Gestor Patrimonial</h4>
+            <p><strong>Misión:</strong> Proporcionar atención y asesoría a clientes realizando acciones comerciales y construyendo relaciones, contribuyendo a la rentabilidad y fidelización.</p>
+            <p><strong>Funciones Comerciales:</strong> Captación, vinculación y gestión diaria.</p>
+          </div>
+        </div>
+      </template>
+    </section>
+
+    <!-- AGENDA -->
     <section id="agenda" class="tab">
-  <div class="controls">
-    <select id="agendaPeriod">
-      <option value="">Todos los periodos</option>
-      <option value="daily">Diario</option>
-      <option value="weekly">Semanal</option>
-      <option value="monthly">Mensual</option>
-      <option value="semiannual">Semestral</option>
-      <option value="annual">Anual</option>
-    </select>
-    <button id="btnToggleAgendaView" type="button">Ver como Acordeón</button>
-  </div>
-
-  <!-- Tabla clásica -->
-  <table id="agendaTable">
-    <thead>
-      <tr>
-        <th>Periodo</th>
-        <th>Día/Semana</th>
-        <th>Descripción</th>
-        <th>Objetivo</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <!-- Acordeón por período -->
-  <div id="agendaAccordion" style="display:none; margin-top:16px;"></div>
-</section>
-
-      <table id="agendaTable"><thead><tr><th>Periodo</th><th>Día/Semana</th><th>Descripción</th></tr></thead><tbody></tbody></table>
-    </section>
-
-    <!-- Template de Introducción (fallback local) -->
-<template id="introTemplate">
-  <section class="ecosistema">
-    <div class="core">
-      <h2>Actores Claves<br><small>Modelo Select Inversiones</small></h2>
-    </div>
-
-    <div class="rol agente">
-      <h3>Agente</h3>
-      <p><strong>Misión:</strong> Líder de gestionar la sistemática de su equipo con foco en los principales pilares Select Inversiones: Exigencia Visitas, Foco en Inversiones, asesoría personalizada y Relacionamiento con el cliente.</p>
-      <p><strong>Funciones Comerciales:</strong> Estrategia, Gestión Diaria, Propuesta de valor Select Inversiones.</p>
-    </div>
-
-    <div class="rol gp">
-      <h3>Gestor Patrimonial</h3>
-      <p><strong>Misión:</strong> Proporcionar atención y asesoría a clientes realizando acciones comerciales y construyendo relaciones, con la finalidad de contribuir a la rentabilidad, fidelización, satisfacción y crecimiento del segmento.</p>
-      <p><strong>Funciones Comerciales:</strong> Captación, Vinculación, Gestión diaria.</p>
-    </div>
-
-    <div class="rol asistente">
-      <h3>Asistente Patrimonial</h3>
-      <p><strong>Misión:</strong> Proporcionar apoyo en la gestión comercial y operativa del Gestor, a través de la atención integral de los clientes, contribuyendo a su fidelización, experiencia y satisfacción.</p>
-      <p><strong>Funciones Comerciales:</strong> Atención, curso productos, apoyo Gestor, acciones comerciales, apoyo resolución reclamos.</p>
-    </div>
-
-    <div class="rol advisor">
-      <h3>Advisor</h3>
-      <p><strong>Misión:</strong> Proporcionar asesoría y apoyo, tanto a clientes como a Gestores, respecto de requisitos sofisticados en inversiones que requieren atención especializada.</p>
-      <p><strong>Funciones Comerciales:</strong> Asesoría a clientes con baja rentabilidad en función de los cuadrantes definidos, visitas conjuntas –en función de objetivos definidos con Agente + GP–, sinergia área de Producto.</p>
-    </div>
-
-    <div class="rol analista">
-      <h3>Analista Inversión</h3>
-      <p><strong>Misión:</strong> Proporcionar apoyo en la estrategia definida por el Advisor, con el fin de rentabilizar de forma eficiente la cartera de productos de los clientes Select Inversiones.</p>
-      <p><strong>Funciones Comerciales:</strong> Coordinar la gestión de cambios en la cartera de inversiones para asegurar alineamiento con recomendaciones de inversión. Envío de bases de contingencia al Advisor para ser comunicadas a la plataforma.</p>
-    </div>
-
-    <div class="rol asesor-inm">
-      <h3>Asesor Inmobiliario</h3>
-      <p><strong>Misión:</strong> Proporcionar asesoría a clientes en el negocio inmobiliario, con el propósito de contribuir a la gestión comercial de carteras de alto patrimonio.</p>
-      <p><strong>Funciones Comerciales:</strong> Asesoría a clientes, apoyo clientes segmentados con acción recomendada, sinergia área inmobiliaria e hipotecaria.</p>
-    </div>
-  </section>
-</template>
-
-<section id="macro" class="tab">
-  <h2>Macro Proceso Comercial</h2>
-  <p>El ciclo comercial se estructura en seis etapas principales. Cada una representa un conjunto de actividades y conductas clave definidas en la sistemática. Haz clic en cualquiera para ver su checklist asociado.</p>
-
-  <svg id="macroSVG" viewBox="0 0 1600 360" width="100%" role="img" aria-label="Macro Proceso Comercial">
-    <defs>
-      <style>
-        .t { font-family: 'Montserrat', system-ui, sans-serif; fill:#333333; font-weight:700; }
-        .tSmall { font-family: 'Montserrat', system-ui, sans-serif; fill:#333333; font-weight:600; font-size:22px; }
-        .bubble { fill:#ffffff; }
-        .lbl { fill:#0b2a57; }
-        .shadow { filter: drop-shadow(0 2px 4px rgba(0,0,0,.15)); }
-        .ring-plan{ stroke:#ffb300; }
-        .ring-cart{ stroke:#1e88e5; }
-        .ring-cont{ stroke:#43a047; }
-        .ring-det{  stroke:#e53935; }
-        .ring-ase{  stroke:#8e24aa; }
-        .ring-cie{  stroke:#039be5; }
-      </style>
-    </defs>
-
-  <!-- Flecha de fondo -->
-  <g>
-    <rect x="40" y="165" width="1450" height="30" fill="#e6e6e6"></rect>
-    <polygon points="1490,150 1560,180 1490,210" fill="#e6e6e6"></polygon>
-  </g>
-
-  <!-- Función util para burbujas -->
-  <!-- Cada grupo <g class="stage" data-stage="..."> es clickeable -->
-  <g class="stage shadow" data-stage="planificacion" cursor="pointer">
-    <circle cx="200" cy="180" r="82" class="bubble" stroke-width="10" class="ring-plan"></circle>
-    <circle cx="200" cy="180" r="82" fill="#ffffff" stroke="#ffb300" stroke-width="10"></circle>
-    <text x="200" y="150" text-anchor="middle" class="tSmall">🗒️</text>
-    <text x="200" y="190" text-anchor="middle" class="t" font-size="20">Planificación</text>
-    <text x="200" y="215" text-anchor="middle" class="t" font-size="20">Comercial</text>
-  </g>
-
-  <g class="stage shadow" data-stage="cartera" cursor="pointer">
-    <circle cx="450" cy="180" r="82" fill="#ffffff" stroke="#1e88e5" stroke-width="10"></circle>
-    <text x="450" y="150" text-anchor="middle" class="tSmall">🔭</text>
-    <text x="450" y="190" text-anchor="middle" class="t" font-size="20">Gestión de</text>
-    <text x="450" y="215" text-anchor="middle" class="t" font-size="20">Cartera</text>
-  </g>
-
-  <g class="stage shadow" data-stage="contacto" cursor="pointer">
-    <circle cx="700" cy="180" r="82" fill="#ffffff" stroke="#43a047" stroke-width="10"></circle>
-    <text x="700" y="150" text-anchor="middle" class="tSmall">✅</text>
-    <text x="700" y="190" text-anchor="middle" class="t" font-size="20">Contacto</text>
-    <text x="700" y="215" text-anchor="middle" class="t" font-size="20">Clientes</text>
-  </g>
-
-  <g class="stage shadow" data-stage="deteccion" cursor="pointer">
-    <circle cx="950" cy="180" r="82" fill="#ffffff" stroke="#e53935" stroke-width="10"></circle>
-    <text x="950" y="150" text-anchor="middle" class="tSmall">🤝</text>
-    <text x="950" y="190" text-anchor="middle" class="t" font-size="20">Detección de</text>
-    <text x="950" y="215" text-anchor="middle" class="t" font-size="20">Necesidades</text>
-  </g>
-
-  <g class="stage shadow" data-stage="asesoria" cursor="pointer">
-    <circle cx="1200" cy="180" r="82" fill="#ffffff" stroke="#8e24aa" stroke-width="10"></circle>
-    <text x="1200" y="150" text-anchor="middle" class="tSmall">❤️</text>
-    <text x="1200" y="190" text-anchor="middle" class="t" font-size="20">Asesoría y</text>
-    <text x="1200" y="215" text-anchor="middle" class="t" font-size="20">Propuesta</text>
-  </g>
-
-  <g class="stage shadow" data-stage="cierre" cursor="pointer">
-    <circle cx="1450" cy="180" r="82" fill="#ffffff" stroke="#039be5" stroke-width="10"></circle>
-    <text x="1450" y="150" text-anchor="middle" class="tSmall">💬</text>
-    <text x="1450" y="190" text-anchor="middle" class="t" font-size="20">Cierre y</text>
-    <text x="1450" y="215" text-anchor="middle" class="t" font-size="20">Seguimiento</text>
-  </g>
-</svg>
-
-<script>
-  // Enlaza clics del SVG al checklist por etapa
-  (function(){
-    const svg = document.getElementById('macroSVG');
-    if(!svg) return;
-    svg.querySelectorAll('.stage').forEach(node=>{
-      node.addEventListener('click', ()=>{
-        const stageKey = node.getAttribute('data-stage');
-        localStorage.setItem('selected_stage', stageKey);
-        // Cambia a pestaña Checklist
-        document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-        const tabBtn = document.querySelector('.tabs button[data-tab="checklist"]');
-        if (tabBtn) tabBtn.classList.add('active');
-        document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
-        document.getElementById('checklist').classList.add('active');
-        // Render específico por etapa
-        if (typeof renderChecklistByStage === 'function') renderChecklistByStage(stageKey);
-      });
-    });
-  })();
-</script>
-
-
-    <section id="checklist" class="tab">
       <div class="controls">
-        <select id="stageSelectChecklist"></select>
+        <select id="agendaPeriod">
+          <option value="">Todos los periodos</option>
+          <option value="daily">Diario</option>
+          <option value="weekly">Semanal</option>
+          <option value="monthly">Mensual</option>
+          <option value="semiannual">Semestral</option>
+          <option value="annual">Anual</option>
+        </select>
+        <button id="btnToggleAgendaView" type="button">Ver como Acordeón</button>
       </div>
-      <form id="checklistForm"></form>
+
+      <table id="agendaTable">
+        <thead>
+          <tr>
+            <th>Periodo</th>
+            <th>Día/Semana</th>
+            <th>Descripción</th>
+            <th>Objetivo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="agendaAccordion" style="display:none; margin-top:16px;"></div>
+    </section>
+
+    <!-- MACRO PROCESO -->
+    <section id="macro" class="tab">
+      <h2>Macro Proceso Comercial</h2>
+      <p>Haz clic en cualquiera de las etapas para ver su checklist asociado.</p>
+
+      <!-- SVG interactivo -->
+      <svg id="macroSVG" viewBox="0 0 1600 360" width="100%" role="img" aria-label="Macro Proceso Comercial">
+        <defs>
+          <style>
+            .t { font-family: 'Montserrat', system-ui, sans-serif; fill:#333333; font-weight:700; }
+            .tSmall { font-family: 'Montserrat', system-ui, sans-serif; fill:#333333; font-weight:600; font-size:22px; }
+            .shadow { filter: drop-shadow(0 2px 4px rgba(0,0,0,.15)); }
+          </style>
+        </defs>
+
+        <!-- Flecha -->
+        <g>
+          <rect x="40" y="165" width="1450" height="30" fill="#e6e6e6"></rect>
+          <polygon points="1490,150 1560,180 1490,210" fill="#e6e6e6"></polygon>
+        </g>
+
+        <!-- Etapas -->
+        <g class="stage shadow" data-stage="planificacion" cursor="pointer">
+          <circle cx="200" cy="180" r="82" fill="#fff" stroke="#ffb300" stroke-width="10"></circle>
+          <text x="200" y="150" text-anchor="middle" class="tSmall">🗒️</text>
+          <text x="200" y="190" text-anchor="middle" class="t" font-size="20">Planificación</text>
+          <text x="200" y="215" text-anchor="middle" class="t" font-size="20">Comercial</text>
+        </g>
+
+        <g class="stage shadow" data-stage="cartera" cursor="pointer">
+          <circle cx="450" cy="180" r="82" fill="#fff" stroke="#1e88e5" stroke-width="10"></circle>
+          <text x="450" y="150" text-anchor="middle" class="tSmall">🔭</text>
+          <text x="450" y="190" text-anchor="middle" class="t" font-size="20">Gestión de</text>
+          <text x="450" y="215" text-anchor="middle" class="t" font-size="20">Cartera</text>
+        </g>
+
+        <g class="stage shadow" data-stage="contacto" cursor="pointer">
+          <circle cx="700" cy="180" r="82" fill="#fff" stroke="#43a047" stroke-width="10"></circle>
+          <text x="700" y="150" text-anchor="middle" class="tSmall">✅</text>
+          <text x="700" y="190" text-anchor="middle" class="t" font-size="20">Contacto</text>
+          <text x="700" y="215" text-anchor="middle" class="t" font-size="20">Clientes</text>
+        </g>
+
+        <g class="stage shadow" data-stage="deteccion" cursor="pointer">
+          <circle cx="950" cy="180" r="82" fill="#fff" stroke="#e53935" stroke-width="10"></circle>
+          <text x="950" y="150" text-anchor="middle" class="tSmall">🤝</text>
+          <text x="950" y="190" text-anchor="middle" class="t" font-size="20">Detección de</text>
+          <text x="950" y="215" text-anchor="middle" class="t" font-size="20">Necesidades</text>
+        </g>
+
+        <g class="stage shadow" data-stage="asesoria" cursor="pointer">
+          <circle cx="1200" cy="180" r="82" fill="#fff" stroke="#8e24aa" stroke-width="10"></circle>
+          <text x="1200" y="150" text-anchor="middle" class="tSmall">❤️</text>
+          <text x="1200" y="190" text-anchor="middle" class="t" font-size="20">Asesoría y</text>
+          <text x="1200" y="215" text-anchor="middle" class="t" font-size="20">Propuesta</text>
+        </g>
+
+        <g class="stage shadow" data-stage="cierre" cursor="pointer">
+          <circle cx="1450" cy="180" r="82" fill="#fff" stroke="#039be5" stroke-width="10"></circle>
+          <text x="1450" y="150" text-anchor="middle" class="tSmall">💬</text>
+          <text x="1450" y="190" text-anchor="middle" class="t" font-size="20">Cierre y</text>
+          <text x="1450" y="215" text-anchor="middle" class="t" font-size="20">Seguimiento</text>
+        </g>
+      </svg>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section id="checklist" class="tab">
+      <h2>Checklist de la Etapa</h2>
+      <div id="checklistForm"></div>
+
       <div class="actions">
-        <input id="notes" placeholder="Notas (opcional)" />
-        <input id="clientOrg" placeholder="Cliente/Organización (opcional)" />
-        <button id="btnSubmitChecklist">Guardar Checklist</button>
+        <input id="clientOrg" placeholder="Cliente / Organización">
+        <textarea id="notes" placeholder="Notas o comentarios"></textarea>
+        <button id="btnSubmitChecklist">Guardar</button>
       </div>
     </section>
 
+    <!-- TOOLKIT -->
     <section id="toolkit" class="tab">
+      <h2>Toolkit de Apoyo</h2>
       <div id="toolkitList" class="cards"></div>
     </section>
 
+    <!-- DIFICULTADES -->
     <section id="difficulties" class="tab">
-      <form id="diffForm" class="stack">
-        <div class="grid">
-          <select id="diffStage"></select>
-          <input id="diffTopic" placeholder="Tema" />
+      <h2>Levantamiento de Dificultades</h2>
+      <form id="diffForm">
+        <div class="grid two">
+          <select id="diffStage"><option value="">Etapa</option></select>
+          <input id="diffTopic" placeholder="Tema o problema detectado">
+          <input id="diffTags" placeholder="Tags (separados por coma)">
           <select id="diffSeverity">
             <option value="1">Baja</option>
             <option value="2">Media</option>
             <option value="3">Alta</option>
           </select>
         </div>
-        <textarea id="diffDescription" placeholder="Describe la dificultad"></textarea>
-        <input id="diffTags" placeholder="Tags (coma separada)" />
-        <button id="btnSubmitDiff">Reportar dificultad</button>
+        <textarea id="diffDescription" placeholder="Describe la dificultad..."></textarea>
+        <button id="btnSubmitDiff">Enviar</button>
       </form>
     </section>
 
+    <!-- HISTORIAL -->
     <section id="history" class="tab">
-      <h3>Últimos registros</h3>
-      <div class="grid two">
-        <div>
-          <h4>Checklist</h4>
-          <table id="histChecklist"><thead><tr><th>Fecha</th><th>Etapa</th><th>Item</th><th>Valor</th><th>Notas</th></tr></thead><tbody></tbody></table>
-        </div>
-        <div>
-          <h4>Dificultades</h4>
-          <table id="histDiff"><thead><tr><th>Fecha</th><th>Etapa</th><th>Tema</th><th>Severidad</th><th>Estado</th></tr></thead><tbody></tbody></table>
-        </div>
-      </div>
+      <h2>Historial de Actividades</h2>
+      <h3>Checklist</h3>
+      <table id="histChecklist">
+        <thead><tr><th>Fecha</th><th>Etapa</th><th>Ítem</th><th>Valor</th><th>Notas</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>Dificultades</h3>
+      <table id="histDiff">
+        <thead><tr><th>Fecha</th><th>Etapa</th><th>Tema</th><th>Severidad</th><th>Estado</th></tr></thead>
+        <tbody></tbody>
+      </table>
     </section>
   </main>
 
   <footer>
-    <small>MVP v0.1 · Montserrat · LocalStorage + Google Sheets</small>
+    MVP v0.1 · Montserrat · LocalStorage + Google Sheets
   </footer>
 
   <script src="app.js"></script>
