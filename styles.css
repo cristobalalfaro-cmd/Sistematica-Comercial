@@ -265,3 +265,69 @@ footer {
 .acc-body { padding: 10px 14px; }
 .acc-list { margin: 0; padding-left: 18px; }
 .acc-list li { margin-bottom: 8px; }
+
+/* ==== Macro Proceso === */
+.macro-diagrama {
+  position: relative;
+  background: #f4f4f4;
+  border-radius: 16px;
+  padding: 40px 20px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+.macro-diagrama .flecha {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 80%;
+  height: 16px;
+  background: var(--gris-claro);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.etapas {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 22px;
+  position: relative;
+  z-index: 2;
+}
+.etapa {
+  background: var(--blanco);
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 6px solid var(--gris-oscuro);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 600;
+  color: var(--gris-oscuro);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.etapa:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+.etapa .icono {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+/* colores por etapa */
+.etapa[data-stage="planificacion"] { border-color: #ffb300; }
+.etapa[data-stage="cartera"] { border-color: #1e88e5; }
+.etapa[data-stage="contacto"] { border-color: #43a047; }
+.etapa[data-stage="deteccion"] { border-color: #e53935; }
+.etapa[data-stage="asesoria"] { border-color: #8e24aa; }
+.etapa[data-stage="cierre"] { border-color: #039be5; }
+
+@media(max-width: 900px){
+  .etapas { justify-content: center; }
+  .etapa { width: 120px; height: 120px; }
+}
+
