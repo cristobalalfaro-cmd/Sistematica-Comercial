@@ -8,10 +8,9 @@
   --blanco: #ffffff;
   --negro: #000000;
 
-  /* tamaños tipográficos */
-  --t1: 1.8rem;     /* títulos principales (h1/h2) */
-  --t2: 1.1rem;     /* subtítulos (h3, card titles) */
-  --body: 0.96rem;  /* texto general */
+  --t1: 1.8rem;   /* títulos h1/h2 */
+  --t2: 1.1rem;   /* h3, card titles */
+  --body: 0.96rem;
 }
 
 * { box-sizing: border-box; }
@@ -26,308 +25,109 @@ body {
 
 /* ===== Header ===== */
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  background: var(--gris-claro);
-  border-bottom: 2px solid var(--gris-oscuro);
-  position: sticky;
-  top: 0;
-  z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; background: var(--gris-claro);
+  border-bottom: 2px solid var(--gris-oscuro); position: sticky; top: 0; z-index: 3;
 }
-h1 {
-  margin: 0;
-  font-size: var(--t1);
-  color: var(--rojo);
-  font-weight: 700;
-}
-
-/* Userbar */
+h1 { margin: 0; font-size: var(--t1); color: var(--rojo); font-weight: 700; }
 .userbar { display: flex; gap: 8px; }
-.userbar input,
-.userbar select {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--gris-oscuro);
-  background: var(--blanco);
-  color: var(--gris-oscuro);
+.userbar input, .userbar select {
+  padding: 8px 10px; border-radius: 999px;
+  border: 1px solid var(--gris-oscuro); background: var(--blanco); color: var(--gris-oscuro);
 }
 .userbar button {
-  padding: 8px 14px;
-  border-radius: 8px;
-  background: var(--rojo);
-  color: var(--blanco);
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background .2s ease;
+  padding: 8px 16px; border-radius: 999px; background: var(--rojo); color: var(--blanco);
+  font-weight: 600; border: none; cursor: pointer; transition: background .2s ease;
 }
 .userbar button:hover { background: var(--rojo-hover); }
 
-/* ===== Tabs / navegación ===== */
-.tabs {
-  display: flex;
-  gap: 10px;
-  padding: 10px 20px;
-  background: var(--blanco);
-  border-bottom: 1px solid var(--gris-oscuro);
-  position: sticky;
-  top: 64px; /* debajo del header */
-  z-index: 2;
-}
-.tabs button {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--gris-oscuro);
-  background: var(--gris-claro);           /* inactivo */
-  color: var(--gris-oscuro);
-  cursor: pointer;
-  font-weight: 500;
-  transition: all .2s ease;
-}
-.tabs button.active {
-  background: var(--rojo);                 /* activo */
-  color: var(--blanco);
-  border-color: var(--rojo);
-}
-/* tabs de etapa (opcional, sólo estética) */
-.tabs .stage-tab { border-style: solid; }
-.tabs .stage-tab.active {
-  background: var(--rojo);
-  color: var(--blanco);
-  border-color: var(--rojo);
+/* ===== Layout con sidebar ===== */
+.layout {
+  display: grid; grid-template-columns: 250px 1fr; gap: 16px;
+  align-items: start; padding: 16px;
 }
 
-/* ===== Layout de contenido ===== */
-main { padding: 24px; }
+/* Sidebar tipo píldora, NO pegados */
+.tabs.vertical {
+  position: sticky; top: 96px; align-self: start;
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 10px; border: 1px solid var(--gris-oscuro);
+  border-radius: 12px; background: var(--gris-claro);
+}
+.tabs.vertical button {
+  width: 100%; text-align: left; padding: 10px 16px;
+  border: 1px solid var(--gris-oscuro);
+  background: var(--gris-claro); color: var(--gris-oscuro);
+  border-radius: 999px; cursor: pointer; font-weight: 600;
+}
+.tabs.vertical button.active { background: var(--rojo); color: var(--blanco); border-color: var(--rojo); }
+
+/* Contenido a la derecha */
+.layout > main { padding: 4px 8px 24px; }
+
+/* Tabs (contenedores) */
 .tab { display: none; }
 .tab.active { display: block; }
 
+/* Tipografía y elementos */
+h2 { color: var(--rojo); font-weight: 700; font-size: var(--t1); margin: 8px 0 10px; }
+h3 { color: var(--rojo); font-weight: 700; font-size: var(--t2); margin: 16px 0 6px; }
+p, ul, li, label, td, th { font-size: var(--body); color: var(--gris-oscuro); }
+ul { margin-left: 24px; }
+button { background: var(--rojo); color: var(--blanco); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600; }
+button:hover { background: var(--rojo-hover); }
+input, select, textarea {
+  font-size: var(--body); border: 1px solid var(--gris-oscuro);
+  border-radius: 8px; padding: 10px; background: var(--blanco); color: var(--gris-oscuro);
+}
+textarea { min-height: 140px; resize: vertical; }
+
+/* Grids y controles */
 .controls { display: flex; gap: 10px; margin: 10px 0 14px; flex-wrap: wrap; }
 .grid { display: grid; gap: 10px; }
 .grid.two { grid-template-columns: 1fr 1fr; }
-.stack { display: grid; gap: 10px; }
 
-/* ===== Tipografía ===== */
-h1, h2, h3 { color: var(--rojo); font-weight: 700; }
-h2 {
-  font-size: var(--t1);     /* mismo tamaño que h1 */
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
-h3 {
-  font-size: var(--t2);
-  margin-top: 16px;
-  margin-bottom: 6px;
-}
-p, ul, li, td, th, label, small {
-  color: var(--gris-oscuro);
-  font-size: var(--body);
-}
-ul { margin-left: 24px; }
-
-hr {
-  border: none;
-  border-top: 1px solid var(--gris-oscuro);
-  margin: 24px 0;
-}
-
-/* ===== Controles / inputs ===== */
-input, select, textarea, .actions input, .actions button {
-  font-size: var(--body);
-}
-textarea {
-  min-height: 110px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--gris-oscuro);
-  background: var(--blanco);
-  color: var(--gris-oscuro);
-  resize: vertical;
-}
-
-/* ===== Botones generales ===== */
-button {
-  background: var(--rojo);
-  color: var(--blanco);
-  border: none;
-  border-radius: 8px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background .2s ease;
-}
-button:hover { background: var(--rojo-hover); }
-
-/* ===== Tablas ===== */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--blanco);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 8px;
-  overflow: hidden;
-}
+/* Tablas */
+table { width: 100%; border-collapse: collapse; background: var(--blanco); border: 1px solid var(--gris-oscuro); border-radius: 8px; overflow: hidden; }
 thead { background: var(--gris-claro); }
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid var(--gris-claro);
-  text-align: left;
-}
+th, td { padding: 10px; border-bottom: 1px solid var(--gris-claro); text-align: left; }
 tbody tr:hover { background: #f8f8f8; }
 
-/* ===== Tarjetas / listas ===== */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
-.card {
-  background: var(--blanco);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 10px;
-  padding: 14px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset;
-}
-.card h4 { margin: 0 0 6px 0; font-size: var(--t2); color: var(--rojo); }
-.card p { margin: 0; }
+/* Cards/Toolkit */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; }
+.card { background: var(--blanco); border: 1px solid var(--gris-oscuro); border-radius: 10px; padding: 14px; }
+.card h4 { margin: 0 0 6px 0; color: var(--rojo); font-size: var(--t2); }
 
-/* ===== Checklist ===== */
-#checklistForm { display: grid; gap: 8px; }
-.chk {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: var(--blanco);
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 10px;
-}
-.chk label { flex: 1; }
-.chk .yn { display: flex; gap: 8px; }
-.chk .yn button {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--gris-oscuro);
-  background: var(--gris-claro);           /* por defecto */
-  color: var(--gris-oscuro);
-}
-.chk .yn button.active.yes {
-  background: #4caf50;                     /* Sí */
-  color: var(--blanco);
-  border-color: #4caf50;
-}
-.chk .yn button.active.no {
-  background: #e53935;                     /* No */
-  color: var(--blanco);
-  border-color: #e53935;
-}
-
-/* Acciones bajo checklist */
-.actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
-.actions input, .actions button {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--gris-oscuro);
-  background: var(--blanco);
-  color: var(--gris-oscuro);
-}
-.actions button { background: var(--rojo); color: var(--blanco); border: none; }
-
-/* ===== Agenda - acordeón ===== */
+/* Acordeón Agenda */
 .acc-panel { border: 1px solid var(--gris-oscuro); border-radius: 8px; margin-bottom: 10px; background: var(--blanco); }
-.acc-head {
-  width: 100%;
-  text-align: left;
-  background: var(--gris-claro);
-  color: var(--gris-oscuro);
-  border: none;
-  border-bottom: 1px solid var(--gris-medio);
-  padding: 10px 12px;
-  border-radius: 8px 8px 0 0;
-  font-weight: 600;
-  cursor: pointer;
-}
+.acc-head { width: 100%; text-align: left; background: var(--gris-claro); color: var(--gris-oscuro); border: none; border-bottom: 1px solid var(--gris-medio); padding: 10px 12px; border-radius: 8px 8px 0 0; font-weight: 600; cursor: pointer; }
 .acc-body { padding: 10px 14px; }
 .acc-list { margin: 0; padding-left: 18px; }
 .acc-list li { margin-bottom: 8px; }
 
-/* ===== Footer ===== */
-footer {
-  padding: 30px 20px;
-  text-align: center;
-  color: var(--gris-oscuro);
-  border-top: 1px solid var(--gris-oscuro);
-  background: var(--gris-claro);
+/* Checklist inline en Ciclo Comercial */
+.macro-checklist { margin-top: 18px; }
+#macroChecklist .chk {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; background: var(--blanco); border: 1px solid var(--gris-oscuro); border-radius: 10px; margin-bottom: 8px;
 }
+#macroChecklist .chk label { flex: 1; }
+#macroChecklist .yn { display: flex; gap: 8px; }
+#macroChecklist .yn button {
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--gris-oscuro);
+  background: var(--gris-claro); color: var(--gris-oscuro);
+}
+#macroChecklist .yn button.active.yes { background: #4caf50; color: #fff; border-color: #4caf50; }
+#macroChecklist .yn button.active.no  { background: #e53935; color: #fff; border-color: #e53935; }
+#macroChecklist .actions { margin-top: 12px; }
 
-/* ===== Responsive ===== */
-@media (max-width: 980px) {
+/* Footer */
+footer { padding: 30px 20px; text-align: center; color: var(--gris-oscuro); border-top: 1px solid var(--gris-oscuro); background: var(--gris-claro); }
+
+/* Responsive */
+@media (max-width: 1024px){
+  .layout { grid-template-columns: 1fr; }
+  .tabs.vertical { position: static; flex-direction: row; flex-wrap: wrap; }
+  .tabs.vertical button { width: auto; }
   .grid.two { grid-template-columns: 1fr; }
-  .tabs { flex-wrap: wrap; }
-  .userbar { flex-wrap: wrap; }
-}
-
-/* ===== Layout con barra lateral ===== */
-.layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 16px;
-  align-items: start;
-  padding: 16px 16px 0;
-}
-
-/* La nav vertical reutiliza .tabs pero en columna */
-.tabs.vertical {
-  position: sticky;
-  top: 96px; /* debajo del header */
-  align-self: start;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0;
-  border: 1px solid var(--gris-oscuro);
-  border-radius: 12px;
-  background: var(--gris-claro);
-}
-.tabs.vertical button {
-  width: 100%;
-  text-align: left;
-  border: none;
-  border-bottom: 1px solid var(--gris-medio);
-  background: var(--gris-claro);
-  color: var(--gris-oscuro);
-  padding: 10px 14px;
-  border-radius: 0;
-}
-.tabs.vertical button:last-child { border-bottom: none; }
-
-.tabs.vertical button.active {
-  background: var(--rojo);
-  color: var(--blanco);
-}
-
-/* main dentro del layout */
-.layout > main {
-  padding: 8px 8px 24px 8px; /* más contenido, menos margen */
-}
-
-/* En móviles/anchos pequeños vuelve a tabs arriba */
-@media (max-width: 1024px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-  .tabs.vertical {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  .tabs.vertical button {
-    border: 1px solid var(--gris-oscuro);
-    border-radius: 999px;
-    margin: 4px;
-  }
 }
