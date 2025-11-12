@@ -331,3 +331,14 @@ footer {
   .etapa { width: 120px; height: 120px; }
 }
 
+/* Estética opcional para los tabs de etapa */
+.tabs .stage-tab {
+  background: var(--gris-claro);
+  border-style: solid;
+}
+.tabs .stage-tab.active {
+  background: var(--rojo);
+  color: var(--blanco);
+  border-color: var(--rojo);
+}
+
