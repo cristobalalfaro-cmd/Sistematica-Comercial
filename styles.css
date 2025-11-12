@@ -1,126 +1,250 @@
-:root{ --bg:#0f1115; --panel:#171923; --muted:#a3acc2; --fg:#e8ecf8; --accent:#6aa9ff; --ok:#39d353; --warn:#ffcc00; --bad:#ff7878; }
-*{ box-sizing:border-box; }
-body{ margin:0; font-family: 'Montserrat',system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); color:var(--fg); }
-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:var(--panel); position:sticky; top:0; z-index:3; }
-h1{ font-size:20px; margin:0; }
-.userbar{ display:flex; gap:8px; }
-.userbar input,.userbar select,.userbar button{ padding:8px 10px; border-radius:10px; border:1px solid #2a2f3a; background:#0f121a; color:var(--fg); }
-.userbar button{ background:var(--accent); color:#061019; font-weight:700; border:none; }
+/* ===== Paleta y base ===== */
+:root {
+  --rojo: #c62828;
+  --rojo-hover: #a51818;
+  --gris-oscuro: #333333;
+  --gris-claro: #e6e6e6;
+  --gris-medio: #bdbdbd;
+  --blanco: #ffffff;
+  --negro: #000000;
 
-.tabs{ display:flex; gap:8px; padding:10px 20px; background:#0d0f15; position:sticky; top:58px; z-index:2; }
-.tabs button{ padding:8px 12px; border-radius:999px; border:1px solid #2a2f3a; background:#0f121a; color:var(--muted); cursor:pointer; }
-.tabs button.active{ background:var(--accent); color:#061019; font-weight:700; }
-
-main{ padding:20px; }
-.tab{ display:none; }
-.tab.active{ display:block; }
-.controls{ display:flex; gap:10px; margin:10px 0 14px; }
-.cards{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:12px; }
-.card{ background:var(--panel); border:1px solid #2a2f3a; border-radius:16px; padding:14px; box-shadow:0 1px 0 rgba(255,255,255,0.04) inset; }
-.card h4{ margin:0 0 6px 0; font-size:14px; }
-.card p{ margin:0; color:var(--muted); font-size:13px; }
-
-.grid{ display:grid; gap:10px; }
-.grid.two{ grid-template-columns:1fr 1fr; }
-.stack{ display:grid; gap:10px; }
-
-#checklistForm{ display:grid; gap:8px; }
-.chk{ display:flex; align-items:center; gap:10px; padding:10px; background:var(--panel); border:1px solid #2a2f3a; border-radius:12px; }
-.chk label{ flex:1; }
-.chk .yn{ display:flex; gap:8px; }
-.yn button{ padding:6px 10px; border-radius:10px; border:1px solid #2a2f3a; background:#0f121a; color:var(--muted); cursor:pointer; }
-.yn button.active.yes{ background:var(--ok); color:#0b1b0b; }
-.yn button.active.no{ background:var(--bad); color:#1a0b0b; }
-
-.actions{ margin-top:10px; display:flex; gap:10px; }
-.actions input,.actions button, textarea, select{ padding:10px; border-radius:10px; border:1px solid #2a2f3a; background:#0f121a; color:var(--fg); }
-.actions button{ background:var(--accent); color:#061019; font-weight:700; border:none; }
-
- table{ width:100%; border-collapse: collapse; background:var(--panel); border:1px solid #2a2f3a; border-radius:12px; overflow:hidden; }
- thead{ background:#10131b; }
- th, td{ padding:10px; border-bottom:1px solid #2a2f3a; font-size:13px; }
- tbody tr:hover{ background:#141826; }
-
- footer{ padding:30px 20px; color:var(--muted); text-align:center; }
-/* Intro — Ecosistema de Roles */
-.ecosistema {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 720px;
-  margin-top: 20px;
+  /* tamaños tipográficos */
+  --t1: 1.8rem;   /* títulos principales (h1/h2) */
+  --t2: 1.1rem;   /* subtítulos (h3, card titles) */
+  --body: 0.96rem; /* texto general */
 }
-.core {
-  position: absolute;
-  background: var(--panel);
-  border-radius: 24px;
-  padding: 28px 36px;
-  text-align: center;
-  border: 2px solid var(--accent);
-  z-index: 10;
-  max-width: 260px;
-}
-.core h2 { margin: 0; font-size: 1.05rem; line-height: 1.2; }
-.core small { font-weight: 400; font-size: .8rem; color: var(--muted); }
 
-.rol {
-  position: absolute;
-  width: 260px;
-  background: #1b1f2a;
-  border-radius: 16px;
-  padding: 12px 14px;
-  border: 1px solid #2a2f3a;
-  box-shadow: 0 0 10px rgba(0,0,0,.3);
-  font-size: .86rem;
-  line-height: 1.35;
-}
-.rol h3 { font-size: .95rem; color: var(--accent); margin: 0 0 6px; }
-
-/* Posiciones radiales alrededor del núcleo */
-.rol.gp { top: 4%; left: 50%; transform: translate(-50%, 0); }
-.rol.agente { top: 22%; left: 2%; transform: translate(0, -50%); }
-.rol.analista { top: 68%; left: 4%; transform: translate(0, -50%); }
-.rol.asesor-inm { bottom: 2%; left: 50%; transform: translate(-50%, 0); }
-.rol.advisor { top: 68%; right: 4%; transform: translate(0, -50%); }
-.rol.asistente { top: 22%; right: 2%; transform: translate(0, -50%); }
-
-/* Responsive: apila tarjetas */
-@media (max-width: 1100px){
-  .ecosistema { height: auto; display: grid; gap: 14px; }
-  .core, .rol { position: static; transform: none; width: 100%; max-width: 720px; }
-}
-/* Intro Narrativa */
-.intro-sistematica {
-  max-width: 900px;
-  margin: 0 auto;
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--blanco);
+  color: var(--gris-oscuro);
   line-height: 1.6;
 }
-.intro-sistematica h1, .intro-sistematica h2 {
-  color: var(--accent);
-  margin-top: 32px;
-}
-.intro-sistematica h1 { font-size: 1.6rem; }
-.intro-sistematica h2 { font-size: 1.2rem; }
-.intro-sistematica p, .intro-sistematica ul { color: var(--fg); font-size: .95rem; }
-.intro-sistematica ul { margin-left: 24px; }
 
-.roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
-  margin-top: 24px;
+/* ===== Header ===== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--gris-claro);
+  border-bottom: 2px solid var(--gris-oscuro);
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
-.roles-grid .rol {
-  background: var(--panel);
-  border: 1px solid #2a2f3a;
-  border-radius: 16px;
-  padding: 14px 18px;
-  box-shadow: 0 0 10px rgba(0,0,0,.3);
+h1 {
+  margin: 0;
+  font-size: var(--t1);
+  color: var(--rojo);
+  font-weight: 700;
 }
-.roles-grid .rol h3 {
-  color: var(--accent);
-  font-size: 1rem;
+
+/* Userbar */
+.userbar { display: flex; gap: 8px; }
+.userbar input,
+.userbar select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gris-oscuro);
+  background: var(--blanco);
+  color: var(--gris-oscuro);
+}
+.userbar button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--rojo);
+  color: var(--blanco);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.userbar button:hover { background: var(--rojo-hover); }
+
+/* ===== Tabs / navegación ===== */
+.tabs {
+  display: flex;
+  gap: 10px;
+  padding: 10px 20px;
+  background: var(--blanco);
+  border-bottom: 1px solid var(--gris-oscuro);
+  position: sticky;
+  top: 64px; /* debajo del header */
+  z-index: 2;
+}
+.tabs button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--gris-oscuro);
+  background: var(--gris-claro);           /* inactivo */
+  color: var(--gris-oscuro);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all .2s ease;
+}
+.tabs button.active {
+  background: var(--rojo);                 /* activo */
+  color: var(--blanco);
+  border-color: var(--rojo);
+}
+
+/* ===== Layout de contenido ===== */
+main { padding: 24px; }
+
+.tab { display: none; }
+.tab.active { display: block; }
+
+.controls { display: flex; gap: 10px; margin: 10px 0 14px; }
+.grid { display: grid; gap: 10px; }
+.grid.two { grid-template-columns: 1fr 1fr; }
+.stack { display: grid; gap: 10px; }
+
+/* ===== Tipografía ===== */
+h1, h2, h3 { color: var(--rojo); font-weight: 700; }
+h2 {
+  font-size: var(--t1);     /* mismo tamaño que h1 */
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+h3 {
+  font-size: var(--t2);
+  margin-top: 16px;
   margin-bottom: 6px;
 }
+p, ul, li, td, th, label, small {
+  color: var(--gris-oscuro);
+  font-size: var(--body);
+}
+ul { margin-left: 24px; }
 
+hr {
+  border: none;
+  border-top: 1px solid var(--gris-oscuro);
+  margin: 24px 0;
+}
+
+/* ===== Controles / inputs ===== */
+input, select, textarea, .actions input, .actions button {
+  font-size: var(--body);
+}
+textarea {
+  min-height: 110px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gris-oscuro);
+  background: var(--blanco);
+  color: var(--gris-oscuro);
+  resize: vertical;
+}
+
+/* ===== Botones generales ===== */
+button {
+  background: var(--rojo);
+  color: var(--blanco);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background .2s ease;
+}
+button:hover { background: var(--rojo-hover); }
+
+/* ===== Tablas ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--blanco);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 8px;
+  overflow: hidden;
+}
+thead { background: var(--gris-claro); }
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid var(--gris-claro);
+  text-align: left;
+}
+tbody tr:hover { background: #f8f8f8; }
+
+/* ===== Tarjetas / listas ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.card {
+  background: var(--blanco);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset;
+}
+.card h4 { margin: 0 0 6px 0; font-size: var(--t2); color: var(--rojo); }
+.card p { margin: 0; }
+
+/* ===== Checklist ===== */
+#checklistForm { display: grid; gap: 8px; }
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--blanco);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 10px;
+}
+.chk label { flex: 1; }
+.chk .yn { display: flex; gap: 8px; }
+.chk .yn button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gris-oscuro);
+  background: var(--gris-claro);           /* por defecto */
+  color: var(--gris-oscuro);
+}
+.chk .yn button.active.yes {
+  background: #4caf50;                     /* Sí */
+  color: var(--blanco);
+  border-color: #4caf50;
+}
+.chk .yn button.active.no {
+  background: #e53935;                     /* No */
+  color: var(--blanco);
+  border-color: #e53935;
+}
+
+/* Acciones bajo checklist */
+.actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+.actions input, .actions button {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gris-oscuro);
+  background: var(--blanco);
+  color: var(--gris-oscuro);
+}
+.actions button {
+  background: var(--rojo);
+  color: var(--blanco);
+  border: none;
+}
+
+/* ===== Footer ===== */
+footer {
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--gris-oscuro);
+  border-top: 1px solid var(--gris-oscuro);
+  background: var(--gris-claro);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 980px) {
+  .grid.two { grid-template-columns: 1fr; }
+  .tabs { flex-wrap: wrap; }
+  .userbar { flex-wrap: wrap; }
+}
