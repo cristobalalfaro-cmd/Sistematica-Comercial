@@ -79,20 +79,110 @@ function renderIntro(){
   $('#introContent').innerHTML = state.introHTML;
 }
 
-// ============= Agenda =============
 async function renderAgenda(){
   const role_id = state.user.role_id || '';
   const data = await httpGet({ action:'agenda', role_id });
-  const rows = data.agenda || [];
+  const rows = (data.agenda || []).map(r => ({
+    period: String(r.period||''),
+    day_or_week: r.day_or_week || '',
+    description: r.description || '',
+    objective: r.objective || '' // NUEVO
+  }));
+
   const periodFilter = $('#agendaPeriod');
-  function paint(){
-    const tbody = $('#agendaTable tbody');
+  const tbody = $('#agendaTable tbody');
+  const acc = $('#agendaAccordion');
+  const btnToggle = $('#btnToggleAgendaView');
+  let useAccordion = false;
+
+  // ---- helpers ----
+  const PERIOD_LABEL = {
+    daily: 'Diario',
+    weekly: 'Semanal',
+    monthly: 'Mensual',
+    semiannual: 'Semestral',
+    annual: 'Anual'
+  };
+  const PERIOD_ORDER = ['daily','weekly','monthly','semiannual','annual'];
+
+  function paintTable(){
     const filter = periodFilter.value;
-    const filtered = rows.filter(r=> !filter || String(r.period)===filter);
-    tbody.innerHTML = filtered.map(r=>`<tr><td>${r.period}</td><td>${r.day_or_week||''}</td><td>${r.description||''}</td></tr>`).join('');
+    const filtered = rows.filter(r=> !filter || r.period===filter);
+    tbody.innerHTML = filtered.map(r =>
+      `<tr>
+        <td>${PERIOD_LABEL[r.period]||r.period}</td>
+        <td>${r.day_or_week}</td>
+        <td>${r.description}</td>
+        <td>${r.objective}</td>
+      </tr>`
+    ).join('');
   }
-  periodFilter.onchange = paint;
-  paint();
+
+  function paintAccordion(){
+    const filter = periodFilter.value;
+    const groups = new Map();
+    rows.forEach(r=>{
+      if(filter && r.period!==filter) return;
+      const key = r.period;
+      if(!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(r);
+    });
+
+    const orderedKeys = Array.from(groups.keys()).sort(
+      (a,b)=> PERIOD_ORDER.indexOf(a)-PERIOD_ORDER.indexOf(b)
+    );
+
+    acc.innerHTML = orderedKeys.map(p=>{
+      const items = groups.get(p) || [];
+      const list = items.map(r =>
+        `<li><strong>${r.day_or_week}:</strong> ${r.description}
+          <br><em>Objetivo:</em> ${r.objective}</li>`
+      ).join('');
+      const id = `acc_${p}`;
+      return `
+        <div class="acc-panel">
+          <button class="acc-head" data-target="${id}">
+            ${PERIOD_LABEL[p]||p} (${items.length})
+          </button>
+          <div id="${id}" class="acc-body" style="display:none;">
+            <ul class="acc-list">${list}</ul>
+          </div>
+        </div>`;
+    }).join('');
+
+    // listeners
+    acc.querySelectorAll('.acc-head').forEach(btn=>{
+      btn.onclick = () => {
+        const target = btn.dataset.target;
+        const body = document.getElementById(target);
+        body.style.display = (body.style.display==='none' || body.style.display==='') ? 'block' : 'none';
+      };
+    });
+  }
+
+  // primer pintado
+  paintTable();
+
+  // toggle vista
+  btnToggle.onclick = () => {
+    useAccordion = !useAccordion;
+    if(useAccordion){
+      $('#agendaTable').style.display = 'none';
+      acc.style.display = 'block';
+      btnToggle.textContent = 'Ver como Tabla';
+      paintAccordion();
+    } else {
+      $('#agendaTable').style.display = 'table';
+      acc.style.display = 'none';
+      btnToggle.textContent = 'Ver como Acordeón';
+      paintTable();
+    }
+  };
+
+  periodFilter.onchange = () => {
+    if(useAccordion) paintAccordion();
+    else paintTable();
+  };
 }
 
 // ============= Macro Proceso =============
