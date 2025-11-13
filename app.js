@@ -220,4 +220,188 @@ async function renderFullChecklist(){
 
   // Guardar
   const btnSave  = $('#btnSaveFullChecklist');
-  const btnClear = $('#btnClearFull
+  const btnClear = $('#btnClearFullChecklist');
+
+  if (btnSave) {
+    btnSave.onclick = async () => {
+      if (!confirm('¿Deseas guardar la evaluación completa del ciclo comercial?')) return;
+      if (!state.user.email){
+        alert('Falta email (en la demo se usa uno genérico).');
+        return;
+      }
+
+      const clientes     = $('#clientesConsiderados')?.value.trim() || '';
+      const periodoDesde = $('#periodoDesde')?.value || '';
+      const periodoHasta = $('#periodoHasta')?.value || '';
+      const comentarios  = $('#comentarios')?.value.trim() || '';
+
+      const rows = Array.from(document.querySelectorAll('#fullChecklist .chk'));
+
+      const payloads = rows.map(box=>{
+        const active = box.querySelector('.yn button.active');
+        if (!active) return null;
+        return {
+          type: 'checklist',
+          user_email: state.user.email,
+          role_id: state.user.role_id,
+          stage_id: box.dataset.stage,
+          item_id: box.dataset.id,
+          value: active.dataset.v,
+          clientes_considerados: clientes,
+          periodo_desde: periodoDesde,
+          periodo_hasta: periodoHasta,
+          comentarios
+        };
+      }).filter(Boolean);
+
+      try {
+        for (const p of payloads){
+          await httpPost(p);
+        }
+        showToast('Checklist guardado');
+        renderHistory();
+      } catch (err) {
+        console.error('Error guardando checklist', err);
+        alert('Ocurrió un error al guardar. Revisa la consola para más detalle.');
+      }
+    };
+  }
+
+  if (btnClear) {
+    btnClear.onclick = () => {
+      document
+        .querySelectorAll('#fullChecklist .yn button')
+        .forEach(b=>b.classList.remove('active','yes','no'));
+
+      ['clientesConsiderados','periodoDesde','periodoHasta','comentarios']
+        .forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+
+      showToast('Evaluación limpiada');
+    };
+  }
+}
+
+// ===== TOOLKIT =====
+function renderToolkit(){
+  const items = [
+    {label:'Script llamada',       icon:'📞', url:'#'},
+    {label:'Redacción correo',     icon:'✉️', url:'#'},
+    {label:'Negociación',          icon:'🤝', url:'#'},
+    {label:'Manejo de objeciones', icon:'🔍', url:'#'},
+    {label:'Propuesta de valor',   icon:'💡', url:'#'},
+    {label:'Manual de productos',  icon:'📘', url:'#'}
+  ];
+
+  const cont = $('#toolkitList');
+  if (!cont) return;
+
+  cont.innerHTML = items.map(t=>`
+    <a class="toolkit-item" href="${t.url}" download>
+      <span class="tk-ico">${t.icon}</span>
+      <span class="tk-txt">Descarga ${t.label}</span>
+    </a>
+  `).join('');
+}
+
+// ===== HISTORIAL =====
+async function renderHistory(){
+  const email = state.user.email;
+  if (!email) return;
+
+  let res = {history:[]};
+  try{
+    res = await httpGet({action:'history', type:'checklist', email});
+  }catch(e){
+    console.warn('Error history', e);
+  }
+
+  const rows = (res.history || []).slice(-100).reverse();
+  const tbody = $('#histChecklist tbody');
+  if (tbody) {
+    tbody.innerHTML = rows.map(r=>{
+      const d = r.timestamp ? new Date(r.timestamp) : null;
+      const fecha = d && !isNaN(d) ? d.toLocaleString() : '';
+      return `<tr>
+        <td>${fecha}</td>
+        <td>${r.stage_id || ''}</td>
+        <td>${r.item_id || ''}</td>
+        <td>${r.value   || ''}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // KPIs: intentar history_summary; si falla, calculamos a partir del history
+  try{
+    const sum = await httpGet({action:'history_summary', email});
+    paintKpis(sum);
+  }catch(e){
+    console.warn('Error history_summary, calculo KPIs básicos', e);
+
+    const byStage = {};
+    rows.forEach(r=>{
+      const st  = r.stage_id || 'otros';
+      const val = String(r.value || '').toUpperCase();
+      if (!byStage[st]) byStage[st] = {yes:0,total:0};
+      byStage[st].total++;
+      if (val === 'YES') byStage[st].yes++;
+    });
+
+    const data = {
+      byStage: Object.entries(byStage).map(([stage_id,v])=>({
+        stage_id,
+        pct: v.total ? Math.round(100*v.yes/v.total) : 0
+      })),
+      byMonth:[]
+    };
+    paintKpis(data);
+  }
+}
+
+function paintKpis(data){
+  const byStage = data.byStage || [];
+  const byMonth = data.byMonth || [];
+
+  // total promedio
+  let total = 0, n = 0;
+  byStage.forEach(s => { total += (s.pct || 0); n++; });
+  const totalNode = $('#kpiTotal');
+  if (totalNode) {
+    totalNode.textContent = n ? Math.round(total/n) + '%' : '—';
+  }
+
+  // por etapa
+  const ul = $('#kpiEtapas');
+  if (ul){
+    ul.innerHTML = byStage.map(s=>{
+      const pct  = s.pct || 0;
+      const label = state.stagesNames[s.stage_id] || s.stage_id || 'Otros';
+      const clean = label.replace(/^\d+\s*\/\s*/,''); // quita "1 / "
+      return `
+        <li>
+          <span class="kpi-badge">${pct}%</span>
+          <span style="min-width:220px">${clean}</span>
+          <span class="kpi-bar"><i style="width:${pct}%"></i></span>
+        </li>
+      `;
+    }).join('');
+  }
+
+  // por mes
+  const box = $('#kpiMeses');
+  if (!box) return;
+
+  if (!byMonth.length){
+    box.innerHTML = '<div class="mes"><span>Sin datos</span><span class="pct">—</span></div>';
+  }else{
+    box.innerHTML = byMonth.map(m=>`
+      <div class="mes">
+        <span>${m.month}</span>
+        <span class="pct">${m.pct || 0}%</span>
+      </div>
+    `).join('');
+  }
+}
+
