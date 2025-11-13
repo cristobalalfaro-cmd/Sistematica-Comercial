@@ -26,6 +26,7 @@ const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
 function showToast(msg){
   const t = $('#toast');
+  if (!t) return;
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 1800);
@@ -47,6 +48,7 @@ function httpPost(payload){
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded', async () => {
+  console.log('Front inicializado'); // <--- para comprobar en consola
   bindTabs();
   setupHeader();
   await loadConfig();
@@ -58,23 +60,29 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 // ===== NAV TABS =====
 function bindTabs(){
-  $$('.tabs.vertical button').forEach(btn=>{
+  const buttons = $$('.tabs.vertical button');
+  if (!buttons.length) {
+    console.warn('No se encontraron botones de tabs');
+    return;
+  }
+
+  buttons.forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      $$('.tabs.vertical button').forEach(b=>b.classList.remove('active'));
+      buttons.forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
 
       const tabId = btn.dataset.tab;
       $$('.tab').forEach(sec=>sec.classList.remove('active'));
-      $('#'+tabId).classList.add('active');
+      const sec = document.getElementById(tabId);
+      if (sec) sec.classList.add('active');
     });
   });
 }
 
 // ===== HEADER =====
 function setupHeader(){
-  // botón salir no hace nada por ahora (demo)
   const btnExit = $('#btnExit');
-  if (btnExit) btnExit.onclick = () => {};
+  if (btnExit) btnExit.onclick = () => {}; // maqueta
 
   if (!state.user.email){
     state.user.email = DEMO_EMAIL;
@@ -88,11 +96,13 @@ async function loadConfig(){
     const cfg = await httpGet({action:'config'});
     state.roles = cfg.roles || [];
   }catch(e){
-    // fallback demo
+    console.warn('Error config, uso rol demo', e);
     state.roles = [{role_id:'ejec', role_name:'Ejecutivo Comercial'}];
   }
 
   const sel = $('#role');
+  if (!sel) return;
+
   sel.innerHTML = state.roles
     .map(r=>`<option value="${r.role_id}">${r.role_name}</option>`)
     .join('');
@@ -110,7 +120,14 @@ async function loadConfig(){
 // ===== INTRO =====
 function renderIntro(){
   const tpl = $('#introTemplate');
-  $('#introContent').innerHTML = tpl ? tpl.innerHTML : '';
+  const cont = $('#introContent');
+  if (!cont) return;
+
+  if (tpl) {
+    cont.innerHTML = tpl.innerHTML;
+  } else {
+    cont.innerHTML = '<p>Bienvenido a la Sistemática Comercial.</p>';
+  }
 }
 
 // ===== CHECKLIST COMPLETO (CICLO COMERCIAL) =====
@@ -122,7 +139,7 @@ async function fetchChecklistFull(){
     const full = await httpGet({action:'checklist_def_full', role_id});
     if (full && full.items && full.items.length) return full.items;
   }catch(e){
-    // sigue
+    console.warn('Error checklist_def_full, uso fallback por etapa', e);
   }
 
   // 2) fallback: pedir por etapa
@@ -131,13 +148,17 @@ async function fetchChecklistFull(){
     try{
       const res = await httpGet({action:'checklist_def', role_id, stage_id});
       (res.items || []).forEach(it => items.push({...it, stage_id}));
-    }catch(e){}
+    }catch(e){
+      console.warn('Error checklist_def en etapa', stage_id, e);
+    }
   }
   return items;
 }
 
 async function renderFullChecklist(){
   const cont = $('#fullChecklist');
+  if (!cont) return;
+
   cont.innerHTML = '<p>Cargando checklist…</p>';
 
   const items = await fetchChecklistFull();
@@ -146,7 +167,6 @@ async function renderFullChecklist(){
     return;
   }
 
-  // agrupar por etapa
   const byStage = new Map();
   items.forEach(it=>{
     const s = it.stage_id || 'otros';
@@ -194,159 +214,10 @@ async function renderFullChecklist(){
       box.querySelectorAll('.yn button').forEach(b=>b.classList.remove('active','yes','no'));
       ev.target.classList.add('active');
       if (ev.target.classList.contains('yes')) ev.target.classList.add('yes');
-      if (ev.target.classList.contains('no')) ev.target.classList.add('no');
+      if (ev.target.classList.contains('no'))  ev.target.classList.add('no');
     });
   });
 
   // Guardar
-  $('#btnSaveFullChecklist').onclick = async () => {
-    if (!confirm('¿Deseas guardar la evaluación completa del ciclo comercial?')) return;
-    if (!state.user.email){
-      alert('Falta email (en la demo se usa uno genérico).');
-      return;
-    }
-
-    const clientes     = $('#clientesConsiderados').value.trim();
-    const periodoDesde = $('#periodoDesde').value || '';
-    const periodoHasta = $('#periodoHasta').value || '';
-    const comentarios  = $('#comentarios').value.trim();
-
-    const rows = Array.from(document.querySelectorAll('#fullChecklist .chk'));
-
-    const payloads = rows.map(box=>{
-      const active = box.querySelector('.yn button.active');
-      if (!active) return null;
-      return {
-        type: 'checklist',
-        user_email: state.user.email,
-        role_id: state.user.role_id,
-        stage_id: box.dataset.stage,
-        item_id: box.dataset.id,
-        value: active.dataset.v,
-        clientes_considerados: clientes,
-        periodo_desde: periodoDesde,
-        periodo_hasta: periodoHasta,
-        comentarios
-      };
-    }).filter(Boolean);
-
-    for (const p of payloads){
-      await httpPost(p);
-    }
-
-    showToast('Checklist guardado');
-    renderHistory();
-  };
-
-  // Borrar datos (limpia solo front)
-  $('#btnClearFullChecklist').onclick = () => {
-    document.querySelectorAll('#fullChecklist .yn button')
-      .forEach(b=>b.classList.remove('active','yes','no'));
-    ['clientesConsiderados','periodoDesde','periodoHasta','comentarios']
-      .forEach(id => { const el = document.getElementById(id); if (el) el.value=''; });
-    showToast('Evaluación limpiada');
-  };
-}
-
-// ===== TOOLKIT =====
-function renderToolkit(){
-  const items = [
-    {label:'Script llamada',       icon:'📞', url:'#'},
-    {label:'Redacción correo',     icon:'✉️', url:'#'},
-    {label:'Negociación',          icon:'🤝', url:'#'},
-    {label:'Manejo de objeciones', icon:'🔍', url:'#'},
-    {label:'Propuesta de valor',   icon:'💡', url:'#'},
-    {label:'Manual de productos',  icon:'📘', url:'#'}
-  ];
-
-  const cont = $('#toolkitList');
-  cont.innerHTML = items.map(t=>`
-    <a class="toolkit-item" href="${t.url}" download>
-      <span class="tk-ico">${t.icon}</span>
-      <span class="tk-txt">Descarga ${t.label}</span>
-    </a>
-  `).join('');
-}
-
-// ===== HISTORIAL =====
-async function renderHistory(){
-  const email = state.user.email;
-
-  let res = {history:[]};
-  try{
-    res = await httpGet({action:'history', type:'checklist', email});
-  }catch(e){}
-
-  const rows = (res.history || []).slice(-100).reverse();
-  const tbody = $('#histChecklist tbody');
-  tbody.innerHTML = rows.map(r=>{
-    const d = r.timestamp ? new Date(r.timestamp) : null;
-    const fecha = d ? d.toLocaleString() : '';
-    return `<tr>
-      <td>${fecha}</td>
-      <td>${r.stage_id || ''}</td>
-      <td>${r.item_id || ''}</td>
-      <td>${r.value || ''}</td>
-    </tr>`;
-  }).join('');
-
-  // KPIs: intentar history_summary; si no existe, calculamos a partir de history
-  try{
-    const sum = await httpGet({action:'history_summary', email});
-    paintKpis(sum);
-  }catch(e){
-    const byStage = {};
-    rows.forEach(r=>{
-      const st = r.stage_id || 'otros';
-      if (!byStage[st]) byStage[st] = {yes:0,total:0};
-      byStage[st].total++;
-      if (String(r.value).toUpperCase() === 'YES') byStage[st].yes++;
-    });
-
-    const data = {
-      byStage: Object.entries(byStage).map(([stage_id,v])=>({
-        stage_id,
-        pct: v.total ? Math.round(100*v.yes/v.total) : 0
-      })),
-      byMonth:[]
-    };
-    paintKpis(data);
-  }
-}
-
-function paintKpis(data){
-  const byStage = data.byStage || [];
-  const byMonth = data.byMonth || [];
-
-  // total promedio
-  let total = 0, n = 0;
-  byStage.forEach(s => { total += (s.pct || 0); n++; });
-  $('#kpiTotal').textContent = n ? Math.round(total/n) + '%' : '—';
-
-  // por etapa
-  const ul = $('#kpiEtapas');
-  ul.innerHTML = byStage.map(s=>{
-    const pct = s.pct || 0;
-    const name = (state.stagesNames[s.stage_id] || s.stage_id).replace(/^\d+ \\/ /,'');
-    return `
-      <li>
-        <span class="kpi-badge">${pct}%</span>
-        <span style="min-width:220px">${name}</span>
-        <span class="kpi-bar"><i style="width:${pct}%"></i></span>
-      </li>
-    `;
-  }).join('');
-
-  // por mes
-  const box = $('#kpiMeses');
-  if (!byMonth.length){
-    box.innerHTML = '<div class="mes"><span>Sin datos</span><span class="pct">—</span></div>';
-  }else{
-    box.innerHTML = byMonth.map(m=>`
-      <div class="mes">
-        <span>${m.month}</span>
-        <span class="pct">${m.pct || 0}%</span>
-      </div>
-    `).join('');
-  }
-}
+  const btnSave  = $('#btnSaveFullChecklist');
+  const btnClear = $('#btnClearFull
