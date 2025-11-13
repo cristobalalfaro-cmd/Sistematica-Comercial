@@ -7,189 +7,253 @@
   <link rel="stylesheet" href="styles.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
+  <!-- HEADER -->
   <header>
     <h1>Sistemática Comercial</h1>
     <div class="userbar">
-      <input type="email" id="email" placeholder="tu@email.com">
+      <span class="welcome">Bienvenido Cristóbal Alfaro S.</span>
+      <label for="role" class="role-label">Rol:</label>
       <select id="role"></select>
-      <button id="btnSaveProfile">Guardar</button>
+      <button id="btnExit" type="button">Salir</button>
     </div>
   </header>
 
   <div class="layout">
-    <!-- ===== Sidebar ===== -->
+    <!-- SIDEBAR -->
     <nav class="tabs vertical">
       <button data-tab="intro" class="active">Introducción</button>
       <button data-tab="agenda">Agenda</button>
       <button data-tab="macro">Ciclo Comercial</button>
       <button data-tab="toolkit">Toolkit</button>
-      <button data-tab="observaciones">Observaciones</button>
       <button data-tab="history">Historial</button>
     </nav>
 
-    <!-- ===== Contenido ===== -->
+    <!-- CONTENIDO -->
     <main>
-      <!-- INTRO -->
+      <!-- INTRODUCCIÓN -->
       <section id="intro" class="tab active">
         <div id="introContent"></div>
 
-        <!-- Fallback si no hay contenido desde Sheets -->
+        <!-- Plantilla para poder reusar/modificar sin tocar JS -->
         <template id="introTemplate">
           <h2>¿Qué es una Sistemática Comercial?</h2>
-          <p>Una Sistemática Comercial es un modelo de trabajo estructurado que define cómo una organización planifica, ejecuta y mide sus actividades comerciales a lo largo del tiempo.</p>
+          <p>
+            Una Sistemática Comercial es un modelo de trabajo estructurado que define cómo una
+            organización planifica, ejecuta y mide sus actividades comerciales a lo largo del tiempo.
+            Su objetivo es alinear la gestión de ventas, el relacionamiento con los clientes y la
+            administración de oportunidades en torno a procesos comunes, herramientas compartidas y
+            estándares de ejecución.
+          </p>
+          <p>
+            En la práctica, una sistemática traduce la estrategia comercial en acciones concretas:
+            define etapas, tareas, interlocutores, herramientas, indicadores y tiempos para cada rol
+            del equipo comercial, asegurando consistencia, trazabilidad y mejora continua.
+          </p>
 
           <h2>¿Para qué sirve?</h2>
           <ul>
-            <li><strong>Claridad y alineamiento</strong> de roles y objetivos.</li>
-            <li><strong>Eficiencia</strong> de tiempos y foco en lo que agrega valor.</li>
-            <li><strong>Seguimiento</strong> y mejora continua.</li>
+            <li><strong>Claridad y alineamiento:</strong> todos los roles comerciales comparten una misma hoja de ruta y objetivos.</li>
+            <li><strong>Eficiencia:</strong> se eliminan redundancias, se optimizan tiempos y se priorizan las actividades de mayor impacto.</li>
+            <li><strong>Seguimiento:</strong> la sistemática facilita medir cumplimiento, identificar brechas y monitorear el desempeño de manera continua.</li>
+            <li><strong>Desarrollo de capacidades:</strong> los equipos fortalecen sus prácticas a través de rutinas y herramientas comunes.</li>
+            <li><strong>Escalabilidad:</strong> la organización puede replicar buenas prácticas en distintas regiones, productos o segmentos.</li>
           </ul>
         </template>
       </section>
 
-      <!-- AGENDA -->
+      <!-- AGENDA (ESTÁTICA) -->
       <section id="agenda" class="tab">
-        <h2>Agenda</h2>
-        <div class="controls">
-          <select id="agendaPeriod">
-            <option value="">Todos los periodos</option>
-            <option value="daily">Diario</option>
-            <option value="weekly">Semanal</option>
-            <option value="monthly">Mensual</option>
-            <option value="semiannual">Semestral</option>
-            <option value="annual">Anual</option>
-          </select>
-          <button id="btnToggleAgendaView" type="button">Ver como Acordeón</button>
+        <div class="section-header">
+          <div class="section-icon">
+            <!-- Icono calendario -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="#c62828" stroke-width="3">
+              <rect x="6" y="10" width="36" height="32" rx="4" ry="4"/>
+              <line x1="6" y1="18" x2="42" y2="18"/>
+              <line x1="16" y1="6" x2="16" y2="14"/>
+              <line x1="32" y1="6" x2="32" y2="14"/>
+            </svg>
+          </div>
+          <h2>Agenda semanal y diaria</h2>
         </div>
 
-        <table id="agendaTable">
-          <thead>
-            <tr>
-              <th>Periodo</th><th>Día/Semana</th><th>Descripción</th><th>Objetivo</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="agenda-card">
+          <div class="agenda-semanal">
+            <div class="dia">
+              <div class="titulo">Lun</div>
+              <div class="bloque">
+                <strong>AM</strong>
+                <ol>
+                  <li>Revisión documento de indicadores financieros semanales.</li>
+                  <li>Coordinación con Equipo Select Inversiones.</li>
+                  <li>Comité de visitas.</li>
+                </ol>
+                <strong>PM</strong>
+                <ol>
+                  <li>Visita del coach de seguros.</li>
+                </ol>
+              </div>
+            </div>
 
-        <div id="agendaAccordion" style="display:none; margin-top:16px;"></div>
+            <div class="dia">
+              <div class="titulo">Mar</div>
+              <div class="bloque">
+                <strong>AM</strong>
+                <ol>
+                  <li>Conexión call estrategia Fondos Mutuos BSAN. <em>09:00 AM Auditorio</em></li>
+                </ol>
+                <strong>PM</strong>
+                <ol>
+                  <li>Visita del coach de seguros.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="dia">
+              <div class="titulo">Mie</div>
+              <div class="bloque">
+                <strong>AM</strong>
+                <ol>
+                  <li>Revisión casos de experiencia.</li>
+                  <li>Conexión call estrategia inversiones. <em>09:00 AM Auditorio</em></li>
+                </ol>
+                <strong>PM</strong>
+                <ol>
+                  <li>Participación reunión estrategia de inversiones.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="dia">
+              <div class="titulo">Jue</div>
+              <div class="bloque">
+                <strong>AM</strong>
+                <ol>
+                  <li>Conexión call estrategia Fondos Mutuos BSAN. <em>09:00 AM Auditorio</em></li>
+                  <li>Actualización de mercado potencial.</li>
+                </ol>
+                <strong>PM</strong>
+                <ol>
+                  <li>Actualización de mercado potencial.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="dia">
+              <div class="titulo">Vie</div>
+              <div class="bloque">
+                <strong>AM</strong>
+                <ol>
+                  <li>Conexión call estrategia acciones. <em>09:00 AM Auditorio</em></li>
+                  <li>Revisión visitas y mercado potencial.</li>
+                </ol>
+                <strong>PM</strong>
+                <ol>
+                  <li>Revisión de visitas y mercado potencial.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <!-- CICLO COMERCIAL -->
+      <!-- CICLO COMERCIAL (CHECKLIST COMPLETO) -->
       <section id="macro" class="tab">
-        <h2>Ciclo Comercial</h2>
-        <p>Haz clic en una etapa para desplegar su checklist.</p>
+        <div class="section-header">
+          <div class="section-icon">
+            <!-- Icono genérico de proceso -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="#c62828" stroke-width="3">
+              <circle cx="24" cy="24" r="20"></circle>
+              <path d="M14 24h20M24 14v20"></path>
+            </svg>
+          </div>
+          <h2>Ciclo Comercial</h2>
+        </div>
 
-        <!-- SVG interactivo -->
-        <svg id="macroSVG" viewBox="0 0 1600 360" width="100%" role="img" aria-label="Ciclo Comercial">
-          <defs>
-            <style>
-              .t { font-family:'Montserrat',system-ui,sans-serif; fill:#333; font-weight:700; }
-              .tSmall { font-family:'Montserrat',system-ui,sans-serif; fill:#333; font-weight:600; font-size:22px;}
-              .shadow { filter: drop-shadow(0 2px 4px rgba(0,0,0,.15)); }
-            </style>
-          </defs>
+        <div id="fullChecklist"></div>
 
-          <!-- Flecha -->
-          <g>
-            <rect x="40" y="165" width="1450" height="30" fill="#e6e6e6"></rect>
-            <polygon points="1490,150 1560,180 1490,210" fill="#e6e6e6"></polygon>
-          </g>
-
-          <!-- Etapas -->
-          <g class="stage shadow" data-stage="planificacion" cursor="pointer">
-            <circle cx="200" cy="180" r="82" fill="#fff" stroke="#ffb300" stroke-width="10"></circle>
-            <text x="200" y="150" text-anchor="middle" class="tSmall">🗒️</text>
-            <text x="200" y="190" text-anchor="middle" class="t" font-size="20">Planificación</text>
-            <text x="200" y="215" text-anchor="middle" class="t" font-size="20">Comercial</text>
-          </g>
-
-          <g class="stage shadow" data-stage="cartera" cursor="pointer">
-            <circle cx="450" cy="180" r="82" fill="#fff" stroke="#1e88e5" stroke-width="10"></circle>
-            <text x="450" y="150" text-anchor="middle" class="tSmall">🔭</text>
-            <text x="450" y="190" text-anchor="middle" class="t" font-size="20">Gestión de</text>
-            <text x="450" y="215" text-anchor="middle" class="t" font-size="20">Cartera</text>
-          </g>
-
-          <g class="stage shadow" data-stage="contacto" cursor="pointer">
-            <circle cx="700" cy="180" r="82" fill="#fff" stroke="#43a047" stroke-width="10"></circle>
-            <text x="700" y="150" text-anchor="middle" class="tSmall">✅</text>
-            <text x="700" y="190" text-anchor="middle" class="t" font-size="20">Contacto</text>
-            <text x="700" y="215" text-anchor="middle" class="t" font-size="20">Clientes</text>
-          </g>
-
-          <g class="stage shadow" data-stage="deteccion" cursor="pointer">
-            <circle cx="950" cy="180" r="82" fill="#fff" stroke="#e53935" stroke-width="10"></circle>
-            <text x="950" y="150" text-anchor="middle" class="tSmall">🤝</text>
-            <text x="950" y="190" text-anchor="middle" class="t" font-size="20">Detección de</text>
-            <text x="950" y="215" text-anchor="middle" class="t" font-size="20">Necesidades</text>
-          </g>
-
-          <g class="stage shadow" data-stage="asesoria" cursor="pointer">
-            <circle cx="1200" cy="180" r="82" fill="#fff" stroke="#8e24aa" stroke-width="10"></circle>
-            <text x="1200" y="150" text-anchor="middle" class="tSmall">❤️</text>
-            <text x="1200" y="190" text-anchor="middle" class="t" font-size="20">Asesoría y</text>
-            <text x="1200" y="215" text-anchor="middle" class="t" font-size="20">Propuesta</text>
-          </g>
-
-          <g class="stage shadow" data-stage="cierre" cursor="pointer">
-            <circle cx="1450" cy="180" r="82" fill="#fff" stroke="#039be5" stroke-width="10"></circle>
-            <text x="1450" y="150" text-anchor="middle" class="tSmall">💬</text>
-            <text x="1450" y="190" text-anchor="middle" class="t" font-size="20">Cierre y</text>
-            <text x="1450" y="215" text-anchor="middle" class="t" font-size="20">Seguimiento</text>
-          </g>
-        </svg>
-
-        <!-- Aquí se inyecta el checklist de la etapa -->
-        <div id="macroChecklist" class="macro-checklist"></div>
+        <!-- Observaciones / info del período -->
+        <div class="eval-footer">
+          <div class="grid two">
+            <input id="clientesConsiderados" placeholder="Clientes considerados para la evaluación">
+            <input id="periodoDesde" type="date" placeholder="Fecha desde">
+            <input id="periodoHasta" type="date" placeholder="Fecha hasta">
+            <input id="comentarios" placeholder="Comentarios de la visita (opcional)">
+          </div>
+          <div class="actions">
+            <button id="btnSaveFullChecklist">Guardar</button>
+            <button id="btnClearFullChecklist" type="button" class="ghost">Borrar datos</button>
+          </div>
+        </div>
       </section>
 
       <!-- TOOLKIT -->
       <section id="toolkit" class="tab">
-        <h2>Toolkit</h2>
-        <p>Descarga documentos de apoyo para la ejecución comercial.</p>
-        <div id="toolkitList" class="cards"></div>
-      </section>
-
-      <!-- OBSERVACIONES -->
-      <section id="observaciones" class="tab">
-        <h2>Observaciones</h2>
-        <p>Anote aquí comentarios de la visita acompañada.</p>
-
-        <div class="grid two">
-          <input id="obsEmpresa" placeholder="Empresa visitada">
-          <input id="obsCliente" placeholder="Cliente visitado">
-          <input id="obsMotivo" placeholder="Motivo de la visita">
-          <input id="obsFecha" type="date" placeholder="Fecha de visita">
+        <div class="section-header">
+          <div class="section-icon">
+            <!-- Icono toolbox -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="#c62828" stroke-width="3">
+              <path d="M8 18h32v18H8z"/>
+              <path d="M16 18v-4h16v4M18 26h12"/>
+            </svg>
+          </div>
+          <h2>Toolkit</h2>
         </div>
 
-        <textarea id="obsTexto" placeholder="Anote aquí comentarios de la visita acompañada"></textarea>
-        <button id="btnEnviarObs">Guardar observación</button>
+        <div id="toolkitList" class="toolkit-grid"></div>
       </section>
 
       <!-- HISTORIAL -->
       <section id="history" class="tab">
-        <h2>Historial</h2>
+        <div class="section-header">
+          <div class="section-icon">
+            <!-- Icono historial / check -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="#c62828" stroke-width="3">
+              <rect x="8" y="8" width="32" height="32" rx="6"></rect>
+              <path d="M16 26l6 6 12-12"/>
+            </svg>
+          </div>
+          <h2>Historial</h2>
+        </div>
 
-        <h3>Checklist</h3>
+        <div class="hist-section">
+          <div class="hist-left">
+            <div class="avatar"></div>
+            <div class="kpi-total">
+              <div class="kpi-title">% Total todas las etapas acumulado a la fecha</div>
+              <div class="kpi-value" id="kpiTotal">—</div>
+            </div>
+            <ul id="kpiEtapas" class="kpi-etapas"></ul>
+          </div>
+
+          <div class="hist-right">
+            <h3>Evaluaciones</h3>
+            <div id="kpiMeses" class="kpi-meses"></div>
+          </div>
+        </div>
+
+        <h3>Últimos registros</h3>
         <table id="histChecklist">
-          <thead><tr><th>Fecha</th><th>Etapa</th><th>Ítem</th><th>Valor</th></tr></thead>
-          <tbody></tbody>
-        </table>
-
-        <h3>Observaciones</h3>
-        <table id="histObs">
-          <thead><tr><th>Fecha</th><th>Empresa</th><th>Cliente</th><th>Motivo</th><th>Comentario</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Etapa</th>
+              <th>Ítem</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
           <tbody></tbody>
         </table>
       </section>
     </main>
   </div>
 
-  <footer>MVP v0.2 · Montserrat · LocalStorage + Google Sheets</footer>
+  <footer>MVP · Montserrat · LocalStorage + Google Sheets</footer>
+
+  <div id="toast" class="toast"></div>
+
   <script src="app.js"></script>
 </body>
 </html>
